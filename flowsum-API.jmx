@@ -145,11 +145,6 @@
             <stringProp name="Argument.desc">本机ip地址---pvuv检查sql用</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="appid" elementType="Argument">
-            <stringProp name="Argument.name">appid</stringProp>
-            <stringProp name="Argument.value">10000042</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
         </collectionProp>
       </Arguments>
       <hashTree/>
@@ -184,6 +179,17 @@
             <stringProp name="Argument.desc">测试flowsum数据库</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="connDataBaseURL_db_dklm" elementType="Argument">
+            <stringProp name="Argument.name">connDataBaseURL_db_dklm</stringProp>
+            <stringProp name="Argument.value">jdbc:mysql://172.16.0.8:3306/db_dklm?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true</stringProp>
+            <stringProp name="Argument.desc">灰度库</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="connDataBaseURL_db_dklm_user" elementType="Argument">
+            <stringProp name="Argument.name">connDataBaseURL_db_dklm_user</stringProp>
+            <stringProp name="Argument.value">root</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </Arguments>
       <hashTree/>
@@ -206,7 +212,7 @@
         <stringProp name="connectionProperties"></stringProp>
       </JDBCDataSource>
       <hashTree/>
-      <JDBCDataSource guiclass="TestBeanGUI" testclass="JDBCDataSource" testname="flowsum----jdbc连接" enabled="true">
+      <JDBCDataSource guiclass="TestBeanGUI" testclass="JDBCDataSource" testname="flowsum----jdbc连接" enabled="false">
         <stringProp name="dataSource">flowsum_jdbc</stringProp>
         <stringProp name="poolMax">0</stringProp>
         <stringProp name="timeout">10000</stringProp>
@@ -222,6 +228,25 @@
         <stringProp name="password">root</stringProp>
         <boolProp name="preinit">false</boolProp>
         <stringProp name="initQuery"></stringProp>
+        <stringProp name="connectionProperties"></stringProp>
+      </JDBCDataSource>
+      <hashTree/>
+      <JDBCDataSource guiclass="TestBeanGUI" testclass="JDBCDataSource" testname="灰度数据库连接" enabled="true">
+        <stringProp name="dataSource">db_dklm_jdbc</stringProp>
+        <stringProp name="poolMax">0</stringProp>
+        <stringProp name="timeout">10000</stringProp>
+        <stringProp name="trimInterval">60000</stringProp>
+        <boolProp name="autocommit">true</boolProp>
+        <stringProp name="transactionIsolation">DEFAULT</stringProp>
+        <boolProp name="preinit">false</boolProp>
+        <stringProp name="initQuery"></stringProp>
+        <boolProp name="keepAlive">true</boolProp>
+        <stringProp name="connectionAge">5000</stringProp>
+        <stringProp name="checkQuery"></stringProp>
+        <stringProp name="dbUrl">${connDataBaseURL_db_dklm}</stringProp>
+        <stringProp name="driver">com.mysql.jdbc.Driver</stringProp>
+        <stringProp name="username">${connDataBaseURL_db_dklm_user}</stringProp>
+        <stringProp name="password">123456</stringProp>
         <stringProp name="connectionProperties"></stringProp>
       </JDBCDataSource>
       <hashTree/>
@@ -53211,7 +53236,7 @@ public static String testAccount() throws Exception {
         <stringProp name="classname">org.apache.jmeter.visualizers.backend.influxdb.InfluxdbBackendListenerClient</stringProp>
       </BackendListener>
       <hashTree/>
-      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="setUp Thread Group" enabled="true">
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="测试数据准备" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -53224,6 +53249,2314 @@ public static String testAccount() throws Exception {
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </SetupThreadGroup>
+      <hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="在数据库中增加排行榜测试数据" enabled="false"/>
+        <hashTree>
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="在数据库中增加排行榜测试数据" enabled="true">
+            <stringProp name="dataSource">flowsum_jdbc</stringProp>
+            <stringProp name="queryType">Update Statement</stringProp>
+            <stringProp name="query">#若想再增加数据量，增加N_ID,并且增加“排行榜测试数据构造0”末尾的数字
+INSERT INTO `flowsum`.`t_basic_cms_product` 
+(`N_ID`, `COMP_ID`, `CREATE_BY`, `CREATE_TIME`, `MODI_BY`, 
+`MODI_TIME`, `ORG_ID`, `SORT_NUM`, `STATUS`, `APPLICATION_MATERIALS`, 
+`APPLICATION_PROCEDURE`, `APPLY_NUM`, `APPLY_URL`, `DL_TIME`, `FEATURE`,
+ `IMG_URL`, `IS_FULL`, `IS_RECOMMEND`, `LABEL1`, `LABEL2`, `MONEY_MAX`, 
+`MONEY_MIN`, `NAME`, `OL_TIME`, `PASS_RATE`, `PRODUCT_DESCRIPTION`, `RATE`, 
+`RATE_TYPE`, `SHOW_LOCATION`, `SUBTITLE`, `TERM_MAX`, `TERM_MIN`, `TERM_TYPE`, 
+`STR0`, `STR1`, `product_type`, `product_level`, `uv_rate`, `apply_rate`, `loan_rate`, 
+`manager_url`, `manager_username`, `manager_psw`, `manager_channel`, `android_download_url`,
+ `ios_download_type`, `ios_download_url`, `android_download_type2`, `ios_bundle_id`, `android_bundle_id`,
+ `JOINT_LOGIN`, `LOGIN_PASS`, `PRODUCT_TAG`, `is_Big_Product`, `private_Key`, `public_Key`, `PARTNER_ID`, 
+`PRODUCT_LINK`, `CHECK_STATUS`, `adver`, `apply_condition`, `harry_Time`, `new_guidance`, `details`, 
+`money_Increasing`, `term_Increasing`, `big_Url`, `product_Shape`, `is_hot`, `DISPLAY_POSITION_MIAO`,
+ `CHECK_IMG_URL`, `CHECK_NAME`, `CHECK_PARTNER_ID`, `CHECK_PRODUCT_LINK`, `CHECK_PRODUCT_SHAPE`, 
+`CHECK_PRODUCT_TYPE`, `CHECK_SUBTITLE`, `HAS_VIDEO`, `VIDEO_URL`, `PRODUCT_BIG_PICTURE`, `HOT_WHETHER_ANDROID`,
+ `HOT_WHETHER_IOS`, `NEWCOMER_ANDROID`, `NEWCOMER_IOS`, `NEW_WHETHER_ANDROID`, `NEW_WHETHER_IOS`, `UV_PRICE`,
+ `MILEAGE_STATUS`, `TARGET_CONTROL`, `SOLD_OUT_TIME`, `COMPLETE_TARGET`, `DARK_HORSE_ANDROID`, `DARK_HORSE_IOS`) 
+VALUES (&apos;30000000&apos;, &apos;10000000&apos;, &apos;1&apos;, &apos;2020-02-10 23:43:20&apos;, &apos;1&apos;, &apos;2020-02-10 23:43:24&apos;, 
+&apos;222&apos;, &apos;1&apos;, &apos;2&apos;, &apos;231233&apos;, &apos;&lt;p&gt;452&lt;/p&gt;&apos;, &apos;567&apos;, &apos;http://www.baidu.com&apos;, NULL, NULL,
+ &apos;https://jkqb-jsb-test.oss-cn-shanghai.aliyuncs.com/530/8e0e16c4-ad38-4659-a663-abfdf3fc2555.png&apos;, 
+&apos;0&apos;, NULL, &apos;推荐&apos;, NULL, &apos;20000.00&apos;, &apos;10000.00&apos;, &apos;排行榜测试数据构造0&apos;, NULL, &apos;5.0&apos;, &apos;23536234&apos;,
+ &apos;67.00&apos;, NULL, &apos;3&apos;, NULL, &apos;23253&apos;, &apos;56&apos;, &apos;1&apos;, NULL, NULL, &apos;2&apos;, NULL, NULL, NULL, NULL, NULL, NULL,
+ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &apos;1&apos;, NULL, NULL, NULL, NULL, NULL, &apos;10000071&apos;, 
+&apos;https://jin.baidu.com/mkt/cloan/guide?code=0122huoke01&amp;channel=JXJhuoke&amp;spot=daikuandaohang-201808101&apos;,
+ &apos;2&apos;, &apos;53245234&apos;, NULL, &apos;56&apos;, &apos;&lt;p&gt;234&lt;/p&gt;&apos;, &apos;&lt;p&gt;面向人群：生意人,上班族,自由职业者,其他,&lt;/p&gt;&lt;p&gt;审核方式：
+全自动审批&lt;/p&gt;&lt;p&gt;到账方式：银行卡&lt;/p&gt;&lt;p&gt;服务费用：234&lt;/p&gt;&lt;p&gt;实际到账：全额到账&lt;/p&gt;&lt;p&gt;还款方式：分期还款&lt;/p&gt;&lt;p&gt;提前提款：
+可以，收取违约金&lt;/p&gt;&lt;p&gt;预期算法：23&lt;/p&gt;&lt;p&gt;查验征信：否&lt;/p&gt;&lt;p&gt;能否提额：是&lt;/p&gt;&apos;, NULL, &apos;45&apos;, NULL, &apos;1&apos;, NULL, NULL, 
+&apos;https://jkqb-jsb-test.oss-cn-shanghai.aliyuncs.com/530/35b9d1a7-66b6-4b66-a623-053a067625ae.png&apos;, &apos;产品名称&apos;, 
+&apos;10000071&apos;, &apos;https://jin.baidu.com/mkt/cloan/guide?code=0122huoke01&amp;channel=JXJhuoke&amp;spot=daikuandaohang-201808101&apos;,
+ &apos;1&apos;, &apos;2&apos;, &apos;43532532&apos;, &apos;0&apos;, NULL, &apos;https://hh-rgd.oss-cn-shanghai.aliyuncs.com/pic/41978fb0-5bf3-415a-a114-383f6cafcd07.png&apos;, 
+&apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1.00&apos;, &apos;0&apos;, &apos;2&apos;, &apos;2020-02-10 23:50:50&apos;, &apos;1&apos;, NULL, NULL),
+
+(&apos;30000001&apos;, &apos;10000000&apos;, &apos;1&apos;, &apos;2020-02-10 23:43:20&apos;, &apos;1&apos;, &apos;2020-02-10 23:43:24&apos;, 
+&apos;222&apos;, &apos;1&apos;, &apos;2&apos;, &apos;231233&apos;, &apos;&lt;p&gt;452&lt;/p&gt;&apos;, &apos;567&apos;, &apos;http://www.baidu.com&apos;, NULL, NULL,
+ &apos;https://jkqb-jsb-test.oss-cn-shanghai.aliyuncs.com/530/8e0e16c4-ad38-4659-a663-abfdf3fc2555.png&apos;, 
+&apos;0&apos;, NULL, &apos;推荐&apos;, NULL, &apos;20000.00&apos;, &apos;10000.00&apos;, &apos;排行榜测试数据构造1&apos;, NULL, &apos;5.0&apos;, &apos;23536234&apos;,
+ &apos;67.00&apos;, NULL, &apos;3&apos;, NULL, &apos;23253&apos;, &apos;56&apos;, &apos;1&apos;, NULL, NULL, &apos;2&apos;, NULL, NULL, NULL, NULL, NULL, NULL,
+ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &apos;1&apos;, NULL, NULL, NULL, NULL, NULL, &apos;10000071&apos;, 
+&apos;https://jin.baidu.com/mkt/cloan/guide?code=0122huoke01&amp;channel=JXJhuoke&amp;spot=daikuandaohang-201808101&apos;,
+ &apos;2&apos;, &apos;53245234&apos;, NULL, &apos;56&apos;, &apos;&lt;p&gt;234&lt;/p&gt;&apos;, &apos;&lt;p&gt;面向人群：生意人,上班族,自由职业者,其他,&lt;/p&gt;&lt;p&gt;审核方式：
+全自动审批&lt;/p&gt;&lt;p&gt;到账方式：银行卡&lt;/p&gt;&lt;p&gt;服务费用：234&lt;/p&gt;&lt;p&gt;实际到账：全额到账&lt;/p&gt;&lt;p&gt;还款方式：分期还款&lt;/p&gt;&lt;p&gt;提前提款：
+可以，收取违约金&lt;/p&gt;&lt;p&gt;预期算法：23&lt;/p&gt;&lt;p&gt;查验征信：否&lt;/p&gt;&lt;p&gt;能否提额：是&lt;/p&gt;&apos;, NULL, &apos;45&apos;, NULL, &apos;1&apos;, NULL, NULL, 
+&apos;https://jkqb-jsb-test.oss-cn-shanghai.aliyuncs.com/530/35b9d1a7-66b6-4b66-a623-053a067625ae.png&apos;, &apos;产品名称&apos;, 
+&apos;10000071&apos;, &apos;https://jin.baidu.com/mkt/cloan/guide?code=0122huoke01&amp;channel=JXJhuoke&amp;spot=daikuandaohang-201808101&apos;,
+ &apos;1&apos;, &apos;2&apos;, &apos;43532532&apos;, &apos;0&apos;, NULL, &apos;https://hh-rgd.oss-cn-shanghai.aliyuncs.com/pic/41978fb0-5bf3-415a-a114-383f6cafcd07.png&apos;, 
+&apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1.00&apos;, &apos;0&apos;, &apos;2&apos;, &apos;2020-02-10 23:50:50&apos;, &apos;1&apos;, NULL, NULL),
+(&apos;30000002&apos;, &apos;10000000&apos;, &apos;1&apos;, &apos;2020-02-10 23:43:20&apos;, &apos;1&apos;, &apos;2020-02-10 23:43:24&apos;, 
+&apos;222&apos;, &apos;1&apos;, &apos;2&apos;, &apos;231233&apos;, &apos;&lt;p&gt;452&lt;/p&gt;&apos;, &apos;567&apos;, &apos;http://www.baidu.com&apos;, NULL, NULL,
+ &apos;https://jkqb-jsb-test.oss-cn-shanghai.aliyuncs.com/530/8e0e16c4-ad38-4659-a663-abfdf3fc2555.png&apos;, 
+&apos;0&apos;, NULL, &apos;推荐&apos;, NULL, &apos;20000.00&apos;, &apos;10000.00&apos;, &apos;排行榜测试数据构造2&apos;, NULL, &apos;5.0&apos;, &apos;23536234&apos;,
+ &apos;67.00&apos;, NULL, &apos;3&apos;, NULL, &apos;23253&apos;, &apos;56&apos;, &apos;1&apos;, NULL, NULL, &apos;2&apos;, NULL, NULL, NULL, NULL, NULL, NULL,
+ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &apos;1&apos;, NULL, NULL, NULL, NULL, NULL, &apos;10000071&apos;, 
+&apos;https://jin.baidu.com/mkt/cloan/guide?code=0122huoke01&amp;channel=JXJhuoke&amp;spot=daikuandaohang-201808101&apos;,
+ &apos;2&apos;, &apos;53245234&apos;, NULL, &apos;56&apos;, &apos;&lt;p&gt;234&lt;/p&gt;&apos;, &apos;&lt;p&gt;面向人群：生意人,上班族,自由职业者,其他,&lt;/p&gt;&lt;p&gt;审核方式：
+全自动审批&lt;/p&gt;&lt;p&gt;到账方式：银行卡&lt;/p&gt;&lt;p&gt;服务费用：234&lt;/p&gt;&lt;p&gt;实际到账：全额到账&lt;/p&gt;&lt;p&gt;还款方式：分期还款&lt;/p&gt;&lt;p&gt;提前提款：
+可以，收取违约金&lt;/p&gt;&lt;p&gt;预期算法：23&lt;/p&gt;&lt;p&gt;查验征信：否&lt;/p&gt;&lt;p&gt;能否提额：是&lt;/p&gt;&apos;, NULL, &apos;45&apos;, NULL, &apos;1&apos;, NULL, NULL, 
+&apos;https://jkqb-jsb-test.oss-cn-shanghai.aliyuncs.com/530/35b9d1a7-66b6-4b66-a623-053a067625ae.png&apos;, &apos;产品名称&apos;, 
+&apos;10000071&apos;, &apos;https://jin.baidu.com/mkt/cloan/guide?code=0122huoke01&amp;channel=JXJhuoke&amp;spot=daikuandaohang-201808101&apos;,
+ &apos;1&apos;, &apos;2&apos;, &apos;43532532&apos;, &apos;0&apos;, NULL, &apos;https://hh-rgd.oss-cn-shanghai.aliyuncs.com/pic/41978fb0-5bf3-415a-a114-383f6cafcd07.png&apos;, 
+&apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1.00&apos;, &apos;0&apos;, &apos;2&apos;, &apos;2020-02-10 23:50:50&apos;, &apos;1&apos;, NULL, NULL);
+
+#若想再增加数据量，product_id（与上表的N_ID一一对应）,他们的排序号sort_number不能一样
+INSERT INTO `flowsum`.`t_product_rank`
+ (`product_id`, `app_id`, `label`, `lending_index`, `up_down`, `publish_time`, `STR0`, 
+`STR1`, `COMP_ID`, `CREATE_BY`, `CREATE_TIME`, `MODI_BY`, `MODI_TIME`, `ORG_ID`, `SORT_NUM`, `STATUS`, 
+`IS_HAND_OPERATE`, `POSITION_ID`) 
+VALUES (&apos;30000000&apos;, &apos;10000042&apos;, &apos;熟&apos;, &apos;55.00&apos;, &apos;22&apos;, &apos;2020-02-10 23:38:43&apos;,
+ NULL, NULL, &apos;10000000&apos;, &apos;1&apos;, &apos;2020-02-10 23:36:52&apos;, &apos;1&apos;, &apos;2020-02-10 23:37:01&apos;, &apos;222&apos;, &apos;99&apos;, &apos;1&apos;, NULL, NULL),
+(&apos;30000001&apos;, &apos;10000042&apos;, &apos;熟&apos;, &apos;55.00&apos;, &apos;22&apos;, &apos;2020-02-10 23:38:43&apos;,
+ NULL, NULL, &apos;10000000&apos;, &apos;1&apos;, &apos;2020-02-10 23:36:52&apos;, &apos;1&apos;, &apos;2020-02-10 23:37:01&apos;, &apos;222&apos;, &apos;98&apos;, &apos;1&apos;, NULL, NULL),
+(&apos;30000002&apos;, &apos;10000042&apos;, &apos;熟&apos;, &apos;55.00&apos;, &apos;22&apos;, &apos;2020-02-10 23:38:43&apos;,
+ NULL, NULL, &apos;10000000&apos;, &apos;1&apos;, &apos;2020-02-10 23:36:52&apos;, &apos;1&apos;, &apos;2020-02-10 23:37:01&apos;, &apos;222&apos;, &apos;97&apos;, &apos;1&apos;, NULL, NULL);</stringProp>
+            <stringProp name="queryArguments"></stringProp>
+            <stringProp name="queryArgumentsTypes"></stringProp>
+            <stringProp name="variableNames"></stringProp>
+            <stringProp name="resultVariable"></stringProp>
+            <stringProp name="queryTimeout"></stringProp>
+            <stringProp name="resultSetMaxRows"></stringProp>
+            <stringProp name="resultSetHandler">Store as String</stringProp>
+          </JDBCSampler>
+          <hashTree/>
+        </hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="oppo接口测试数据准备" enabled="true"/>
+        <hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="空包名的app数据准备" enabled="true"/>
+          <hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="临时保存原来的包名" enabled="true">
+              <stringProp name="dataSource">db_dklm_jdbc</stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="query">select LOCAL_VERSION from t_basic_app where APP_KEY=&quot;${appkey_nopkg}&quot;</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="variableNames">packagename</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+            </JDBCSampler>
+            <hashTree>
+              <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="BeanShell PostProcessor" enabled="true">
+                <boolProp name="resetInterpreter">false</boolProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="script">packagename = vars.get(&quot;packagename_1&quot;);
+//log.info(&quot;********************&quot;);
+//log.info(packagename);
+props.put(&quot;package_temp&quot;,packagename);</stringProp>
+              </BeanShellPostProcessor>
+              <hashTree/>
+            </hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="将包名置空" enabled="true">
+              <stringProp name="dataSource">db_dklm_jdbc</stringProp>
+              <stringProp name="queryType">Update Statement</stringProp>
+              <stringProp name="query">update t_basic_app set  LOCAL_VERSION=&quot;&quot; where APP_KEY=&quot;${appkey_nopkg}&quot;;</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="variableNames"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+          </hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="有包名的app数据准备" enabled="true"/>
+          <hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="临时保存原来的包名" enabled="true">
+              <stringProp name="dataSource">db_dklm_jdbc</stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="query">select LOCAL_VERSION from t_basic_app where APP_KEY=&quot;${appkey}&quot;</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="variableNames">packagename1</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+            </JDBCSampler>
+            <hashTree>
+              <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="BeanShell PostProcessor" enabled="true">
+                <boolProp name="resetInterpreter">false</boolProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="script">packagename = vars.get(&quot;packagename1_1&quot;);
+//log.info(&quot;********************&quot;);
+//log.info(packagename);
+props.put(&quot;package_temp1&quot;,packagename);</stringProp>
+              </BeanShellPostProcessor>
+              <hashTree/>
+            </hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="将包名设置为${package_mody}" enabled="true">
+              <stringProp name="dataSource">db_dklm_jdbc</stringProp>
+              <stringProp name="queryType">Update Statement</stringProp>
+              <stringProp name="query">update t_basic_app set  LOCAL_VERSION=&quot;${package_mody}&quot; where APP_KEY=&quot;${appkey}&quot;;</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="variableNames"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="信用白马OPPO广告主转化数据接口" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="信用白马灰度服务" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="用户定义的变量" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">172.16.0.14</stringProp>
+          <stringProp name="HTTPSampler.port">8762</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
+          <stringProp name="HTTPSampler.path"></stringProp>
+          <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </ConfigTestElement>
+        <hashTree/>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="用户定义的变量" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="verCode0" elementType="Argument">
+              <stringProp name="Argument.name">verCode0</stringProp>
+              <stringProp name="Argument.value"></stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="type" elementType="Argument">
+              <stringProp name="Argument.name">type</stringProp>
+              <stringProp name="Argument.value">1</stringProp>
+              <stringProp name="Argument.desc">0：一键登陆 1：普通登陆</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="onekey" elementType="Argument">
+              <stringProp name="Argument.name">onekey</stringProp>
+              <stringProp name="Argument.value">111</stringProp>
+              <stringProp name="Argument.desc">一键登录参数：1.appId、当前APP对应的appid,SDK传入; 2.accessToken、运营商token,SDK传入; 3.telecom、运营商，SDK传入; 4.timestamp、UNIX时间戳，毫秒级，SDK传入; 5.randoms</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="shanyankey" elementType="Argument">
+              <stringProp name="Argument.name">shanyankey</stringProp>
+              <stringProp name="Argument.value"></stringProp>
+              <stringProp name="Argument.desc">解密key</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="loginType" elementType="Argument">
+              <stringProp name="Argument.name">loginType</stringProp>
+              <stringProp name="Argument.value">0</stringProp>
+              <stringProp name="Argument.desc">1：登陆留资 0：直接登陆</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="userName" elementType="Argument">
+              <stringProp name="Argument.name">userName</stringProp>
+              <stringProp name="Argument.value"></stringProp>
+              <stringProp name="Argument.desc">用户名，留资用</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="userIdCard" elementType="Argument">
+              <stringProp name="Argument.name">userIdCard</stringProp>
+              <stringProp name="Argument.value"></stringProp>
+              <stringProp name="Argument.desc">身份证，留资用</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="channel_oppo" elementType="Argument">
+              <stringProp name="Argument.name">channel_oppo</stringProp>
+              <stringProp name="Argument.value">16</stringProp>
+              <stringProp name="Argument.desc">16为oppo渠道</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="old_pkg" elementType="Argument">
+              <stringProp name="Argument.name">old_pkg</stringProp>
+              <stringProp name="Argument.value"></stringProp>
+              <stringProp name="Argument.desc">用来保存app表中的原来的包名，以便后面恢复</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="new_pkg" elementType="Argument">
+              <stringProp name="Argument.name">new_pkg</stringProp>
+              <stringProp name="Argument.value"></stringProp>
+              <stringProp name="Argument.desc">用来重新义包名以作测试</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="channel_not_oppo" elementType="Argument">
+              <stringProp name="Argument.name">channel_not_oppo</stringProp>
+              <stringProp name="Argument.value">14</stringProp>
+              <stringProp name="Argument.desc">安智渠道</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="old_user_phone" elementType="Argument">
+              <stringProp name="Argument.name">old_user_phone</stringProp>
+              <stringProp name="Argument.value"></stringProp>
+              <stringProp name="Argument.desc">用来保存老用户的手机号</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="appkey" elementType="Argument">
+              <stringProp name="Argument.name">appkey</stringProp>
+              <stringProp name="Argument.value">8516549256257D5A</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="sign" elementType="Argument">
+              <stringProp name="Argument.name">sign</stringProp>
+              <stringProp name="Argument.value">借贷王借钱</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="appid" elementType="Argument">
+              <stringProp name="Argument.name">appid</stringProp>
+              <stringProp name="Argument.value">10000006</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="imeiIdfa" elementType="Argument">
+              <stringProp name="Argument.name">imeiIdfa</stringProp>
+              <stringProp name="Argument.value">444880206195941</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="vcode" elementType="Argument">
+              <stringProp name="Argument.name">vcode</stringProp>
+              <stringProp name="Argument.value">000000</stringProp>
+              <stringProp name="Argument.desc">设置验证码使接口登录异常</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="appkey_error" elementType="Argument">
+              <stringProp name="Argument.name">appkey_error</stringProp>
+              <stringProp name="Argument.value">AAAABBBBCCCC1111</stringProp>
+              <stringProp name="Argument.desc">设置错误的appkey使接口登录异常</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="phone_error" elementType="Argument">
+              <stringProp name="Argument.name">phone_error</stringProp>
+              <stringProp name="Argument.value">11111111111</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">设置手机号错误使接口登录异常</stringProp>
+            </elementProp>
+            <elementProp name="appkey_nopkg" elementType="Argument">
+              <stringProp name="Argument.name">appkey_nopkg</stringProp>
+              <stringProp name="Argument.value">6CADE9D482F1E3A8</stringProp>
+              <stringProp name="Argument.desc">测试过程中将把此app的包名改为空</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="appid_nopkg" elementType="Argument">
+              <stringProp name="Argument.name">appid_nopkg</stringProp>
+              <stringProp name="Argument.value">10000005</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">测试过程中将把此app的包名改为空</stringProp>
+            </elementProp>
+            <elementProp name="sign_nopkg" elementType="Argument">
+              <stringProp name="Argument.name">sign_nopkg</stringProp>
+              <stringProp name="Argument.value">鲢鱼贷款</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">测试过程中将把此app的包名改为空</stringProp>
+            </elementProp>
+            <elementProp name="imeiIdfa_null" elementType="Argument">
+              <stringProp name="Argument.name">imeiIdfa_null</stringProp>
+              <stringProp name="Argument.value"></stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="package_mody" elementType="Argument">
+              <stringProp name="Argument.name">package_mody</stringProp>
+              <stringProp name="Argument.value">com.tonghuashun.app.xlyuser</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="oppo_res" elementType="Argument">
+              <stringProp name="Argument.name">oppo_res</stringProp>
+              <stringProp name="Argument.value">{&quot;ret&quot;:0}</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="当app的渠道是oppo时，调用oppo接口" enabled="true"/>
+        <hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="发送验证码--ok" enabled="true"/>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="发送验证码" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+    &quot;appKey&quot;: &quot;${appkey}&quot;,&#xd;
+    &quot;uuid&quot;: &quot;${uuid}&quot;,&#xd;
+    &quot;version&quot;: &quot;${version}&quot;,&#xd;
+    &quot;os&quot;: &quot;${os}&quot;,&#xd;
+    &quot;channel&quot;: ${channel},&#xd;
+    &quot;token&quot;: &quot;&quot;,&#xd;
+    &quot;data&quot;: {&#xd;
+        &quot;phone&quot;: &quot;${phone_temp}&quot;&#xd;
+    },&#xd;
+    &quot;latitude&quot;: &quot;&quot;,&#xd;
+    &quot;longitude&quot;: &quot;&quot;,&#xd;
+    &quot;isLogin&quot;: &quot;&quot;&#xd;
+}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/api/user/sendVerCode.action</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">responseData</stringProp>
+                <stringProp name="RegexExtractor.regex">responseData&quot;:&quot;(.*?)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default"></stringProp>
+                <stringProp name="RegexExtractor.match_number">1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+              <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="局部变量phone_temp生成" enabled="true">
+                <boolProp name="resetInterpreter">false</boolProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="script">vars.put(&quot;phone_temp&quot;,&quot;${__time(/100,)}&quot;)</stringProp>
+              </BeanShellPreProcessor>
+              <hashTree/>
+            </hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="响应解密" enabled="true">
+              <stringProp name="BeanShellSampler.query">import com.houhan.decrypt.EncryptType;
+import com.houhan.framework.core.tool.RsaEncryptAesTool;
+import com.houhan.decrypt.EncryptDecrypt;
+
+public static String testAccount() throws Exception {
+       //aes密钥
+        String aesKey = &quot;${aeskey}&quot;;
+        //密钥
+        String privateKey = &quot;${privatekey}&quot;;
+        //加解密类型 ENCRYPT加密；DECRYPT 解密
+        Integer type = EncryptType.DECRYPT.getValue();
+        //进行解密
+        //encryptOrDecrypt(ase密钥,密钥,需要加解密内容，加解密类型)
+        EncryptDecrypt encr = new EncryptDecrypt();
+        String jieMi = encr.encryptOrDecrypt(aesKey,privateKey,&quot;${responseData}&quot;,type);
+
+        return jieMi;
+}
+
+  vars.put(&quot;res&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+            <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="发送验证码" enabled="true">
+              <boolProp name="displayJMeterProperties">false</boolProp>
+              <boolProp name="displayJMeterVariables">true</boolProp>
+              <boolProp name="displaySystemProperties">false</boolProp>
+            </DebugSampler>
+            <hashTree>
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="响应断言" enabled="true">
+                <collectionProp name="Asserion.test_strings">
+                  <stringProp name="-856238407">&quot;status&quot; : 1</stringProp>
+                </collectionProp>
+                <stringProp name="Assertion.custom_message"></stringProp>
+                <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+                <boolProp name="Assertion.assume_success">false</boolProp>
+                <intProp name="Assertion.test_type">16</intProp>
+              </ResponseAssertion>
+              <hashTree/>
+            </hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="查询发送短信验证码" enabled="true">
+              <stringProp name="dataSource">db_sms_test</stringProp>
+              <stringProp name="query">select CONTENT from t_sms_record_detail where SIGN = &apos;${sign}&apos; AND PHONE = &apos;${phone_temp}&apos; order BY CREATE_TIME DESC LIMIT 1</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames">aaa</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+            </JDBCSampler>
+            <hashTree>
+              <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+                <stringProp name="ConstantTimer.delay">300</stringProp>
+              </ConstantTimer>
+              <hashTree/>
+            </hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="处理短信验证码" enabled="true">
+              <stringProp name="BeanShellSampler.query">
+
+
+public static String testAccount() throws Exception {
+
+	String ss = &quot;${aaa_1}&quot;;
+	//获取验证码
+	String resp = ss.substring(4,10);
+     //System.out.println(ss.substring(5,10));
+	 return resp;
+}
+	//设置短信验证码到verCode参数里面
+  vars.put(&quot;verCode&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+          </hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="登录--ok" enabled="true"/>
+          <hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="请求明文加密" enabled="false">
+              <stringProp name="BeanShellSampler.query">import com.houhan.decrypt.EncryptType;
+import com.houhan.framework.core.tool.RsaEncryptAesTool;
+import com.houhan.decrypt.EncryptDecrypt;
+
+public static String testAccount() throws Exception {
+       //aes密钥
+        String aesKey = &quot;${aeskey}&quot;;
+        //密钥
+        String privateKey = &quot;${privatekey}&quot;;
+        // params组装接口文档中所定义的接口参数
+	   String params = 	&quot;{&apos;appKey&apos;: &apos;${appkey}&apos;,&apos;uuid&apos;: &apos;${uuid}&apos;,&apos;version&apos;: &apos;${version}&apos;,&apos;os&apos;: &apos;${os}&apos;,&apos;channel&apos;: ${channel},&apos;token&apos;: &apos;&apos;,&apos;data&apos;: {&apos;phone&apos;: &apos;${phone1}&apos;,&apos;verCode&apos;: &apos;${verCode}&apos;,&apos;type&apos;: &apos;${type}&apos;,&apos;onekey&apos;: &apos;${onekey}&apos;,&apos;shanyankey&apos;: &apos;${shanyankey}&apos;,&apos;loginType&apos;: &apos;${loginType}&apos;,&apos;userName&apos;: &apos;${userName}&apos;,&apos;userIdCard&apos;: &apos;${userIdCard}&apos;},&apos;latitude&apos;: &apos;&apos;,&apos;longitude&apos;: &apos;&apos;,&apos;isLogin&apos;: &apos;&apos;}&quot;;
+        
+        //加解密类型 ENCRYPT加密；DECRYPT 解密
+        Integer type = EncryptType.ENCRYPT.getValue();
+        //进行解密
+        //encryptOrDecrypt(ase密钥,密钥,需要加解密内容，加解密类型)
+        EncryptDecrypt encr = new EncryptDecrypt();
+        String jiaMi = encr.encryptOrDecrypt(aesKey,privateKey,params,type);
+
+        return jiaMi;
+}
+
+  vars.put(&quot;req&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="登录${__threadNum}" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+    &quot;appKey&quot;: &quot;${appkey}&quot;,&#xd;
+    &quot;uuid&quot;: &quot;${uuid}&quot;,&#xd;
+    &quot;version&quot;: &quot;${version}&quot;,&#xd;
+    &quot;os&quot;: &quot;${os}&quot;,&#xd;
+    &quot;channel&quot;: ${channel_oppo},&#xd;
+    &quot;token&quot;: &quot;&quot;,&#xd;
+    &quot;data&quot;: {&#xd;
+        &quot;phone&quot;: &quot;${phone_temp}&quot;,&#xd;
+        &quot;verCode&quot;: &quot;${verCode}&quot;,&#xd;
+        &quot;type&quot;: &quot;${type}&quot;,&#xd;
+        &quot;onekey&quot;: &quot;${onekey}&quot;,&#xd;
+        &quot;shanyankey&quot;: &quot;${shanyankey}&quot;,&#xd;
+        &quot;loginType&quot;: &quot;${loginType}&quot;,&#xd;
+        &quot;userName&quot;: &quot;${userName}&quot;,&#xd;
+        &quot;userIdCard&quot;: &quot;${userIdCard}&quot;&#xd;
+    },&#xd;
+    &quot;imeiIdfa&quot;: &quot;${imeiIdfa}&quot;,&#xd;
+    &quot;latitude&quot;: &quot;&quot;,&#xd;
+    &quot;longitude&quot;: &quot;&quot;,&#xd;
+    &quot;isLogin&quot;: &quot;&quot;&#xd;
+}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/api/user/login.action</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">responseData</stringProp>
+                <stringProp name="RegexExtractor.regex">responseData&quot;:&quot;(.*?)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default"></stringProp>
+                <stringProp name="RegexExtractor.match_number">1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+            </hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="响应解密" enabled="true">
+              <stringProp name="BeanShellSampler.query">import com.houhan.decrypt.EncryptType;
+import com.houhan.framework.core.tool.RsaEncryptAesTool;
+import com.houhan.decrypt.EncryptDecrypt;
+
+public static String testAccount() throws Exception {
+       //aes密钥
+        String aesKey = &quot;${aeskey}&quot;;
+        //密钥
+        String privateKey = &quot;${privatekey}&quot;;
+        //加解密类型 ENCRYPT加密；DECRYPT 解密
+        Integer type = EncryptType.DECRYPT.getValue();
+        //进行解密
+        //encryptOrDecrypt(ase密钥,密钥,需要加解密内容，加解密类型)
+        EncryptDecrypt encr = new EncryptDecrypt();
+        String jieMi = encr.encryptOrDecrypt(aesKey,privateKey,&quot;${responseData}&quot;,type);
+
+        return jieMi;
+}
+
+  vars.put(&quot;res&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+            <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="登录" enabled="true">
+              <boolProp name="displayJMeterProperties">false</boolProp>
+              <boolProp name="displayJMeterVariables">true</boolProp>
+              <boolProp name="displaySystemProperties">false</boolProp>
+            </DebugSampler>
+            <hashTree>
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="响应断言" enabled="true">
+                <collectionProp name="Asserion.test_strings">
+                  <stringProp name="-856238407">&quot;status&quot; : 1</stringProp>
+                  <stringProp name="110541305">token</stringProp>
+                  <stringProp name="-683473455">phone&quot; : &quot;${phone_temp}</stringProp>
+                </collectionProp>
+                <stringProp name="Assertion.custom_message"></stringProp>
+                <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+                <boolProp name="Assertion.assume_success">false</boolProp>
+                <intProp name="Assertion.test_type">16</intProp>
+              </ResponseAssertion>
+              <hashTree/>
+              <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="BeanShell PostProcessor" enabled="true">
+                <stringProp name="filename"></stringProp>
+                <stringProp name="parameters"></stringProp>
+                <boolProp name="resetInterpreter">false</boolProp>
+                <stringProp name="script">import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+String lgreq=(String) vars.get(&quot;res&quot;);
+JSONObject jsonObj=JSONObject.parseObject(lgreq);
+//System.out.println(jsonObj.get(&quot;data&quot;));
+JSONObject jsonObj2=(JSONObject) jsonObj.get(&quot;data&quot;);
+ //System.out.println(jsonObj2.get(&quot;active_code_serial_no&quot;));
+String s=(String) jsonObj2.get(&quot;token&quot;);
+String s1=(String) jsonObj2.get(&quot;phone&quot;);
+
+props.put(&quot;token&quot;,s);
+props.put(&quot;phone_rank&quot;,s1);
+
+ 		
+</stringProp>
+              </BeanShellPostProcessor>
+              <hashTree/>
+            </hashTree>
+            <JDBCPostProcessor guiclass="TestBeanGUI" testclass="JDBCPostProcessor" testname="数据库查询请求和响应参数" enabled="true">
+              <stringProp name="dataSource">db_dklm_jdbc</stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="query">select count(*),REQUEST_PARAM,RESPONSE_PARAM from t_app_api_his where TYPE=&quot;3&quot; and PHONE=&quot;${phone_temp}&quot;;</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="variableNames">sum,req,res</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+            </JDBCPostProcessor>
+            <hashTree/>
+            <BeanShellAssertion guiclass="BeanShellAssertionGui" testclass="BeanShellAssertion" testname="BeanShell Assertion" enabled="true">
+              <stringProp name="BeanShellAssertion.query">import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+//获取查询数据库所得的变量值
+sum=vars.get(&quot;sum_1&quot;);
+req=vars.get(&quot;req_1&quot;);
+String res=(String)vars.get(&quot;res_1&quot;);
+String oppores=(String)vars.get(&quot;oppo_res&quot;);
+String pkg_init=(String)vars.get(&quot;package_mody&quot;);
+String sum =(String) sum;
+//System.out.println(sum);
+//log.info(&quot;******************&quot;);
+//log.info(sum);
+//log.info(req);
+//log.info(res);
+
+//将响应的字符串转换成json对象
+String lgreq=(String) req;
+//System.out.println(lgreq);
+
+JSONObject json_response=JSONObject.parseObject(lgreq);
+
+int dataType=json_response.get(&quot;dataType&quot;);
+int channel=json_response.get(&quot;channel&quot;);
+String pkg=json_response.get(&quot;pkg&quot;);
+
+//System.out.println(dataType);
+//System.out.println(channel);
+//System.out.println(pkg);
+
+if(dataType!=2 || channel!=1 || !pkg.equals(pkg_init) || !sum.equals(&quot;1&quot;) || !res.equals(oppores)){
+	Failure=true;
+	}
+
+
+
+
+
+
+
+</stringProp>
+              <stringProp name="BeanShellAssertion.filename"></stringProp>
+              <stringProp name="BeanShellAssertion.parameters"></stringProp>
+              <boolProp name="BeanShellAssertion.resetInterpreter">false</boolProp>
+            </BeanShellAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="当app的渠道不是oppo时，预期不能调用oppo接口" enabled="true"/>
+        <hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="发送验证码--ok" enabled="true"/>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="发送验证码" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+    &quot;appKey&quot;: &quot;${appkey}&quot;,&#xd;
+    &quot;uuid&quot;: &quot;${uuid}&quot;,&#xd;
+    &quot;version&quot;: &quot;${version}&quot;,&#xd;
+    &quot;os&quot;: &quot;${os}&quot;,&#xd;
+    &quot;channel&quot;: ${channel},&#xd;
+    &quot;token&quot;: &quot;&quot;,&#xd;
+    &quot;data&quot;: {&#xd;
+        &quot;phone&quot;: &quot;${phone_temp}&quot;&#xd;
+    },&#xd;
+    &quot;latitude&quot;: &quot;&quot;,&#xd;
+    &quot;longitude&quot;: &quot;&quot;,&#xd;
+    &quot;isLogin&quot;: &quot;&quot;&#xd;
+}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/api/user/sendVerCode.action</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">responseData</stringProp>
+                <stringProp name="RegexExtractor.regex">responseData&quot;:&quot;(.*?)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default"></stringProp>
+                <stringProp name="RegexExtractor.match_number">1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+              <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="局部变量phone_temp生成" enabled="true">
+                <boolProp name="resetInterpreter">false</boolProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="script">vars.put(&quot;phone_temp&quot;,&quot;${__time(/100,)}&quot;)</stringProp>
+              </BeanShellPreProcessor>
+              <hashTree/>
+            </hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="响应解密" enabled="true">
+              <stringProp name="BeanShellSampler.query">import com.houhan.decrypt.EncryptType;
+import com.houhan.framework.core.tool.RsaEncryptAesTool;
+import com.houhan.decrypt.EncryptDecrypt;
+
+public static String testAccount() throws Exception {
+       //aes密钥
+        String aesKey = &quot;${aeskey}&quot;;
+        //密钥
+        String privateKey = &quot;${privatekey}&quot;;
+        //加解密类型 ENCRYPT加密；DECRYPT 解密
+        Integer type = EncryptType.DECRYPT.getValue();
+        //进行解密
+        //encryptOrDecrypt(ase密钥,密钥,需要加解密内容，加解密类型)
+        EncryptDecrypt encr = new EncryptDecrypt();
+        String jieMi = encr.encryptOrDecrypt(aesKey,privateKey,&quot;${responseData}&quot;,type);
+
+        return jieMi;
+}
+
+  vars.put(&quot;res&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+            <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="发送验证码" enabled="true">
+              <boolProp name="displayJMeterProperties">false</boolProp>
+              <boolProp name="displayJMeterVariables">true</boolProp>
+              <boolProp name="displaySystemProperties">false</boolProp>
+            </DebugSampler>
+            <hashTree>
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="响应断言" enabled="true">
+                <collectionProp name="Asserion.test_strings">
+                  <stringProp name="-856238407">&quot;status&quot; : 1</stringProp>
+                </collectionProp>
+                <stringProp name="Assertion.custom_message"></stringProp>
+                <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+                <boolProp name="Assertion.assume_success">false</boolProp>
+                <intProp name="Assertion.test_type">16</intProp>
+              </ResponseAssertion>
+              <hashTree/>
+            </hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="查询发送短信验证码" enabled="true">
+              <stringProp name="dataSource">db_sms_test</stringProp>
+              <stringProp name="query">select CONTENT from t_sms_record_detail where SIGN = &apos;${sign}&apos; AND PHONE = &apos;${phone_temp}&apos; order BY CREATE_TIME DESC LIMIT 1</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames">aaa</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+            </JDBCSampler>
+            <hashTree>
+              <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+                <stringProp name="ConstantTimer.delay">300</stringProp>
+              </ConstantTimer>
+              <hashTree/>
+            </hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="处理短信验证码" enabled="true">
+              <stringProp name="BeanShellSampler.query">
+
+
+public static String testAccount() throws Exception {
+
+	String ss = &quot;${aaa_1}&quot;;
+	//获取验证码
+	String resp = ss.substring(4,10);
+     //System.out.println(ss.substring(5,10));
+	 return resp;
+}
+	//设置短信验证码到verCode参数里面
+  vars.put(&quot;verCode&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+          </hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="登录--ok" enabled="true"/>
+          <hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="请求明文加密" enabled="false">
+              <stringProp name="BeanShellSampler.query">import com.houhan.decrypt.EncryptType;
+import com.houhan.framework.core.tool.RsaEncryptAesTool;
+import com.houhan.decrypt.EncryptDecrypt;
+
+public static String testAccount() throws Exception {
+       //aes密钥
+        String aesKey = &quot;${aeskey}&quot;;
+        //密钥
+        String privateKey = &quot;${privatekey}&quot;;
+        // params组装接口文档中所定义的接口参数
+	   String params = 	&quot;{&apos;appKey&apos;: &apos;${appkey}&apos;,&apos;uuid&apos;: &apos;${uuid}&apos;,&apos;version&apos;: &apos;${version}&apos;,&apos;os&apos;: &apos;${os}&apos;,&apos;channel&apos;: ${channel},&apos;token&apos;: &apos;&apos;,&apos;data&apos;: {&apos;phone&apos;: &apos;${phone1}&apos;,&apos;verCode&apos;: &apos;${verCode}&apos;,&apos;type&apos;: &apos;${type}&apos;,&apos;onekey&apos;: &apos;${onekey}&apos;,&apos;shanyankey&apos;: &apos;${shanyankey}&apos;,&apos;loginType&apos;: &apos;${loginType}&apos;,&apos;userName&apos;: &apos;${userName}&apos;,&apos;userIdCard&apos;: &apos;${userIdCard}&apos;},&apos;latitude&apos;: &apos;&apos;,&apos;longitude&apos;: &apos;&apos;,&apos;isLogin&apos;: &apos;&apos;}&quot;;
+        
+        //加解密类型 ENCRYPT加密；DECRYPT 解密
+        Integer type = EncryptType.ENCRYPT.getValue();
+        //进行解密
+        //encryptOrDecrypt(ase密钥,密钥,需要加解密内容，加解密类型)
+        EncryptDecrypt encr = new EncryptDecrypt();
+        String jiaMi = encr.encryptOrDecrypt(aesKey,privateKey,params,type);
+
+        return jiaMi;
+}
+
+  vars.put(&quot;req&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="登录${__threadNum}" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+    &quot;appKey&quot;: &quot;${appkey}&quot;,&#xd;
+    &quot;uuid&quot;: &quot;${uuid}&quot;,&#xd;
+    &quot;version&quot;: &quot;${version}&quot;,&#xd;
+    &quot;os&quot;: &quot;${os}&quot;,&#xd;
+    &quot;channel&quot;: ${channel_not_oppo},&#xd;
+    &quot;token&quot;: &quot;&quot;,&#xd;
+    &quot;data&quot;: {&#xd;
+        &quot;phone&quot;: &quot;${phone_temp}&quot;,&#xd;
+        &quot;verCode&quot;: &quot;${verCode}&quot;,&#xd;
+        &quot;type&quot;: &quot;${type}&quot;,&#xd;
+        &quot;onekey&quot;: &quot;${onekey}&quot;,&#xd;
+        &quot;shanyankey&quot;: &quot;${shanyankey}&quot;,&#xd;
+        &quot;loginType&quot;: &quot;${loginType}&quot;,&#xd;
+        &quot;userName&quot;: &quot;${userName}&quot;,&#xd;
+        &quot;userIdCard&quot;: &quot;${userIdCard}&quot;&#xd;
+    },&#xd;
+    &quot;imeiIdfa&quot;: &quot;${imeiIdfa}&quot;,&#xd;
+    &quot;latitude&quot;: &quot;&quot;,&#xd;
+    &quot;longitude&quot;: &quot;&quot;,&#xd;
+    &quot;isLogin&quot;: &quot;&quot;&#xd;
+}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/api/user/login.action</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree/>
+            <JDBCPostProcessor guiclass="TestBeanGUI" testclass="JDBCPostProcessor" testname="数据库查询请求和响应参数" enabled="true">
+              <stringProp name="dataSource">db_dklm_jdbc</stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="query">select count(*),REQUEST_PARAM,RESPONSE_PARAM from t_app_api_his where TYPE=&quot;3&quot; and PHONE=&quot;${phone_temp}&quot;;</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="variableNames">sum</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+            </JDBCPostProcessor>
+            <hashTree/>
+            <BeanShellAssertion guiclass="BeanShellAssertionGui" testclass="BeanShellAssertion" testname="BeanShell Assertion" enabled="true">
+              <stringProp name="BeanShellAssertion.query">
+
+//获取查询数据库所得的变量值
+sum=vars.get(&quot;sum_1&quot;);
+
+
+if(!sum.equals(&quot;0&quot;)){
+	Failure=true;
+	}
+
+
+
+
+
+
+
+</stringProp>
+              <stringProp name="BeanShellAssertion.filename"></stringProp>
+              <stringProp name="BeanShellAssertion.parameters"></stringProp>
+              <boolProp name="BeanShellAssertion.resetInterpreter">false</boolProp>
+            </BeanShellAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="手机号错误导致登录异常时，预期：不能调用oppo接口" enabled="true"/>
+        <hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="发送验证码--ok" enabled="true"/>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="发送验证码" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+    &quot;appKey&quot;: &quot;${appkey}&quot;,&#xd;
+    &quot;uuid&quot;: &quot;${uuid}&quot;,&#xd;
+    &quot;version&quot;: &quot;${version}&quot;,&#xd;
+    &quot;os&quot;: &quot;${os}&quot;,&#xd;
+    &quot;channel&quot;: ${channel},&#xd;
+    &quot;token&quot;: &quot;&quot;,&#xd;
+    &quot;data&quot;: {&#xd;
+        &quot;phone&quot;: &quot;${phone_temp}&quot;&#xd;
+    },&#xd;
+    &quot;latitude&quot;: &quot;&quot;,&#xd;
+    &quot;longitude&quot;: &quot;&quot;,&#xd;
+    &quot;isLogin&quot;: &quot;&quot;&#xd;
+}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/api/user/sendVerCode.action</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">responseData</stringProp>
+                <stringProp name="RegexExtractor.regex">responseData&quot;:&quot;(.*?)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default"></stringProp>
+                <stringProp name="RegexExtractor.match_number">1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+              <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="局部变量phone_temp生成" enabled="true">
+                <boolProp name="resetInterpreter">false</boolProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="script">vars.put(&quot;phone_temp&quot;,&quot;${__time(/100,)}&quot;)</stringProp>
+              </BeanShellPreProcessor>
+              <hashTree/>
+            </hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="响应解密" enabled="true">
+              <stringProp name="BeanShellSampler.query">import com.houhan.decrypt.EncryptType;
+import com.houhan.framework.core.tool.RsaEncryptAesTool;
+import com.houhan.decrypt.EncryptDecrypt;
+
+public static String testAccount() throws Exception {
+       //aes密钥
+        String aesKey = &quot;${aeskey}&quot;;
+        //密钥
+        String privateKey = &quot;${privatekey}&quot;;
+        //加解密类型 ENCRYPT加密；DECRYPT 解密
+        Integer type = EncryptType.DECRYPT.getValue();
+        //进行解密
+        //encryptOrDecrypt(ase密钥,密钥,需要加解密内容，加解密类型)
+        EncryptDecrypt encr = new EncryptDecrypt();
+        String jieMi = encr.encryptOrDecrypt(aesKey,privateKey,&quot;${responseData}&quot;,type);
+
+        return jieMi;
+}
+
+  vars.put(&quot;res&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+            <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="发送验证码" enabled="true">
+              <boolProp name="displayJMeterProperties">false</boolProp>
+              <boolProp name="displayJMeterVariables">true</boolProp>
+              <boolProp name="displaySystemProperties">false</boolProp>
+            </DebugSampler>
+            <hashTree>
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="响应断言" enabled="true">
+                <collectionProp name="Asserion.test_strings">
+                  <stringProp name="-856238407">&quot;status&quot; : 1</stringProp>
+                </collectionProp>
+                <stringProp name="Assertion.custom_message"></stringProp>
+                <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+                <boolProp name="Assertion.assume_success">false</boolProp>
+                <intProp name="Assertion.test_type">16</intProp>
+              </ResponseAssertion>
+              <hashTree/>
+            </hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="查询发送短信验证码" enabled="true">
+              <stringProp name="dataSource">db_sms_test</stringProp>
+              <stringProp name="query">select CONTENT from t_sms_record_detail where SIGN = &apos;${sign}&apos; AND PHONE = &apos;${phone_temp}&apos; order BY CREATE_TIME DESC LIMIT 1</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames">aaa</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+            </JDBCSampler>
+            <hashTree>
+              <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+                <stringProp name="ConstantTimer.delay">300</stringProp>
+              </ConstantTimer>
+              <hashTree/>
+            </hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="处理短信验证码" enabled="true">
+              <stringProp name="BeanShellSampler.query">
+
+
+public static String testAccount() throws Exception {
+
+	String ss = &quot;${aaa_1}&quot;;
+	//获取验证码
+	String resp = ss.substring(4,10);
+     //System.out.println(ss.substring(5,10));
+	 return resp;
+}
+	//设置短信验证码到verCode参数里面
+  vars.put(&quot;verCode&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+          </hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="登录--ok" enabled="true"/>
+          <hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="请求明文加密" enabled="false">
+              <stringProp name="BeanShellSampler.query">import com.houhan.decrypt.EncryptType;
+import com.houhan.framework.core.tool.RsaEncryptAesTool;
+import com.houhan.decrypt.EncryptDecrypt;
+
+public static String testAccount() throws Exception {
+       //aes密钥
+        String aesKey = &quot;${aeskey}&quot;;
+        //密钥
+        String privateKey = &quot;${privatekey}&quot;;
+        // params组装接口文档中所定义的接口参数
+	   String params = 	&quot;{&apos;appKey&apos;: &apos;${appkey}&apos;,&apos;uuid&apos;: &apos;${uuid}&apos;,&apos;version&apos;: &apos;${version}&apos;,&apos;os&apos;: &apos;${os}&apos;,&apos;channel&apos;: ${channel},&apos;token&apos;: &apos;&apos;,&apos;data&apos;: {&apos;phone&apos;: &apos;${phone1}&apos;,&apos;verCode&apos;: &apos;${verCode}&apos;,&apos;type&apos;: &apos;${type}&apos;,&apos;onekey&apos;: &apos;${onekey}&apos;,&apos;shanyankey&apos;: &apos;${shanyankey}&apos;,&apos;loginType&apos;: &apos;${loginType}&apos;,&apos;userName&apos;: &apos;${userName}&apos;,&apos;userIdCard&apos;: &apos;${userIdCard}&apos;},&apos;latitude&apos;: &apos;&apos;,&apos;longitude&apos;: &apos;&apos;,&apos;isLogin&apos;: &apos;&apos;}&quot;;
+        
+        //加解密类型 ENCRYPT加密；DECRYPT 解密
+        Integer type = EncryptType.ENCRYPT.getValue();
+        //进行解密
+        //encryptOrDecrypt(ase密钥,密钥,需要加解密内容，加解密类型)
+        EncryptDecrypt encr = new EncryptDecrypt();
+        String jiaMi = encr.encryptOrDecrypt(aesKey,privateKey,params,type);
+
+        return jiaMi;
+}
+
+  vars.put(&quot;req&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="登录${__threadNum}" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+    &quot;appKey&quot;: &quot;${appkey}&quot;,&#xd;
+    &quot;uuid&quot;: &quot;${uuid}&quot;,&#xd;
+    &quot;version&quot;: &quot;${version}&quot;,&#xd;
+    &quot;os&quot;: &quot;${os}&quot;,&#xd;
+    &quot;channel&quot;: ${channel_oppo},&#xd;
+    &quot;token&quot;: &quot;&quot;,&#xd;
+    &quot;data&quot;: {&#xd;
+        &quot;phone&quot;: &quot;${phone_error}&quot;,&#xd;
+        &quot;verCode&quot;: &quot;${verCode}&quot;,&#xd;
+        &quot;type&quot;: &quot;${type}&quot;,&#xd;
+        &quot;onekey&quot;: &quot;${onekey}&quot;,&#xd;
+        &quot;shanyankey&quot;: &quot;${shanyankey}&quot;,&#xd;
+        &quot;loginType&quot;: &quot;${loginType}&quot;,&#xd;
+        &quot;userName&quot;: &quot;${userName}&quot;,&#xd;
+        &quot;userIdCard&quot;: &quot;${userIdCard}&quot;&#xd;
+    },&#xd;
+    &quot;imeiIdfa&quot;: &quot;${imeiIdfa}&quot;,&#xd;
+    &quot;latitude&quot;: &quot;&quot;,&#xd;
+    &quot;longitude&quot;: &quot;&quot;,&#xd;
+    &quot;isLogin&quot;: &quot;&quot;&#xd;
+}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/api/user/login.action</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree/>
+            <JDBCPostProcessor guiclass="TestBeanGUI" testclass="JDBCPostProcessor" testname="数据库查询请求和响应参数" enabled="true">
+              <stringProp name="dataSource">db_dklm_jdbc</stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="query">select count(*),REQUEST_PARAM,RESPONSE_PARAM from t_app_api_his where TYPE=&quot;3&quot; and PHONE=&quot;${phone_temp}&quot;;</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="variableNames">sum</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+            </JDBCPostProcessor>
+            <hashTree/>
+            <BeanShellAssertion guiclass="BeanShellAssertionGui" testclass="BeanShellAssertion" testname="BeanShell Assertion" enabled="true">
+              <stringProp name="BeanShellAssertion.query">
+
+//获取查询数据库所得的变量值
+sum=vars.get(&quot;sum_1&quot;);
+
+
+if(!sum.equals(&quot;0&quot;)){
+	Failure=true;
+	}
+
+
+
+
+
+
+
+</stringProp>
+              <stringProp name="BeanShellAssertion.filename"></stringProp>
+              <stringProp name="BeanShellAssertion.parameters"></stringProp>
+              <boolProp name="BeanShellAssertion.resetInterpreter">false</boolProp>
+            </BeanShellAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="appkey错误导致登录异常时，预期：不能调用oppo接口" enabled="true"/>
+        <hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="发送验证码--ok" enabled="true"/>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="发送验证码" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+    &quot;appKey&quot;: &quot;${appkey}&quot;,&#xd;
+    &quot;uuid&quot;: &quot;${uuid}&quot;,&#xd;
+    &quot;version&quot;: &quot;${version}&quot;,&#xd;
+    &quot;os&quot;: &quot;${os}&quot;,&#xd;
+    &quot;channel&quot;: ${channel},&#xd;
+    &quot;token&quot;: &quot;&quot;,&#xd;
+    &quot;data&quot;: {&#xd;
+        &quot;phone&quot;: &quot;${phone_temp}&quot;&#xd;
+    },&#xd;
+    &quot;latitude&quot;: &quot;&quot;,&#xd;
+    &quot;longitude&quot;: &quot;&quot;,&#xd;
+    &quot;isLogin&quot;: &quot;&quot;&#xd;
+}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/api/user/sendVerCode.action</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">responseData</stringProp>
+                <stringProp name="RegexExtractor.regex">responseData&quot;:&quot;(.*?)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default"></stringProp>
+                <stringProp name="RegexExtractor.match_number">1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+              <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="局部变量phone_temp生成" enabled="true">
+                <boolProp name="resetInterpreter">false</boolProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="script">vars.put(&quot;phone_temp&quot;,&quot;${__time(/100,)}&quot;)</stringProp>
+              </BeanShellPreProcessor>
+              <hashTree/>
+            </hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="响应解密" enabled="true">
+              <stringProp name="BeanShellSampler.query">import com.houhan.decrypt.EncryptType;
+import com.houhan.framework.core.tool.RsaEncryptAesTool;
+import com.houhan.decrypt.EncryptDecrypt;
+
+public static String testAccount() throws Exception {
+       //aes密钥
+        String aesKey = &quot;${aeskey}&quot;;
+        //密钥
+        String privateKey = &quot;${privatekey}&quot;;
+        //加解密类型 ENCRYPT加密；DECRYPT 解密
+        Integer type = EncryptType.DECRYPT.getValue();
+        //进行解密
+        //encryptOrDecrypt(ase密钥,密钥,需要加解密内容，加解密类型)
+        EncryptDecrypt encr = new EncryptDecrypt();
+        String jieMi = encr.encryptOrDecrypt(aesKey,privateKey,&quot;${responseData}&quot;,type);
+
+        return jieMi;
+}
+
+  vars.put(&quot;res&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+            <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="发送验证码" enabled="true">
+              <boolProp name="displayJMeterProperties">false</boolProp>
+              <boolProp name="displayJMeterVariables">true</boolProp>
+              <boolProp name="displaySystemProperties">false</boolProp>
+            </DebugSampler>
+            <hashTree>
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="响应断言" enabled="true">
+                <collectionProp name="Asserion.test_strings">
+                  <stringProp name="-856238407">&quot;status&quot; : 1</stringProp>
+                </collectionProp>
+                <stringProp name="Assertion.custom_message"></stringProp>
+                <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+                <boolProp name="Assertion.assume_success">false</boolProp>
+                <intProp name="Assertion.test_type">16</intProp>
+              </ResponseAssertion>
+              <hashTree/>
+            </hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="查询发送短信验证码" enabled="true">
+              <stringProp name="dataSource">db_sms_test</stringProp>
+              <stringProp name="query">select CONTENT from t_sms_record_detail where SIGN = &apos;${sign}&apos; AND PHONE = &apos;${phone_temp}&apos; order BY CREATE_TIME DESC LIMIT 1</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames">aaa</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+            </JDBCSampler>
+            <hashTree>
+              <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+                <stringProp name="ConstantTimer.delay">300</stringProp>
+              </ConstantTimer>
+              <hashTree/>
+            </hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="处理短信验证码" enabled="true">
+              <stringProp name="BeanShellSampler.query">
+
+
+public static String testAccount() throws Exception {
+
+	String ss = &quot;${aaa_1}&quot;;
+	//获取验证码
+	String resp = ss.substring(4,10);
+     //System.out.println(ss.substring(5,10));
+	 return resp;
+}
+	//设置短信验证码到verCode参数里面
+  vars.put(&quot;verCode&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+          </hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="登录--ok" enabled="true"/>
+          <hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="请求明文加密" enabled="false">
+              <stringProp name="BeanShellSampler.query">import com.houhan.decrypt.EncryptType;
+import com.houhan.framework.core.tool.RsaEncryptAesTool;
+import com.houhan.decrypt.EncryptDecrypt;
+
+public static String testAccount() throws Exception {
+       //aes密钥
+        String aesKey = &quot;${aeskey}&quot;;
+        //密钥
+        String privateKey = &quot;${privatekey}&quot;;
+        // params组装接口文档中所定义的接口参数
+	   String params = 	&quot;{&apos;appKey&apos;: &apos;${appkey}&apos;,&apos;uuid&apos;: &apos;${uuid}&apos;,&apos;version&apos;: &apos;${version}&apos;,&apos;os&apos;: &apos;${os}&apos;,&apos;channel&apos;: ${channel},&apos;token&apos;: &apos;&apos;,&apos;data&apos;: {&apos;phone&apos;: &apos;${phone1}&apos;,&apos;verCode&apos;: &apos;${verCode}&apos;,&apos;type&apos;: &apos;${type}&apos;,&apos;onekey&apos;: &apos;${onekey}&apos;,&apos;shanyankey&apos;: &apos;${shanyankey}&apos;,&apos;loginType&apos;: &apos;${loginType}&apos;,&apos;userName&apos;: &apos;${userName}&apos;,&apos;userIdCard&apos;: &apos;${userIdCard}&apos;},&apos;latitude&apos;: &apos;&apos;,&apos;longitude&apos;: &apos;&apos;,&apos;isLogin&apos;: &apos;&apos;}&quot;;
+        
+        //加解密类型 ENCRYPT加密；DECRYPT 解密
+        Integer type = EncryptType.ENCRYPT.getValue();
+        //进行解密
+        //encryptOrDecrypt(ase密钥,密钥,需要加解密内容，加解密类型)
+        EncryptDecrypt encr = new EncryptDecrypt();
+        String jiaMi = encr.encryptOrDecrypt(aesKey,privateKey,params,type);
+
+        return jiaMi;
+}
+
+  vars.put(&quot;req&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="登录${__threadNum}" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+    &quot;appKey&quot;: &quot;${appkey_error}&quot;,&#xd;
+    &quot;uuid&quot;: &quot;${uuid}&quot;,&#xd;
+    &quot;version&quot;: &quot;${version}&quot;,&#xd;
+    &quot;os&quot;: &quot;${os}&quot;,&#xd;
+    &quot;channel&quot;: ${channel_oppo},&#xd;
+    &quot;token&quot;: &quot;&quot;,&#xd;
+    &quot;data&quot;: {&#xd;
+        &quot;phone&quot;: &quot;${phone_temp}&quot;,&#xd;
+        &quot;verCode&quot;: &quot;${verCode}&quot;,&#xd;
+        &quot;type&quot;: &quot;${type}&quot;,&#xd;
+        &quot;onekey&quot;: &quot;${onekey}&quot;,&#xd;
+        &quot;shanyankey&quot;: &quot;${shanyankey}&quot;,&#xd;
+        &quot;loginType&quot;: &quot;${loginType}&quot;,&#xd;
+        &quot;userName&quot;: &quot;${userName}&quot;,&#xd;
+        &quot;userIdCard&quot;: &quot;${userIdCard}&quot;&#xd;
+    },&#xd;
+    &quot;imeiIdfa&quot;: &quot;${imeiIdfa}&quot;,&#xd;
+    &quot;latitude&quot;: &quot;&quot;,&#xd;
+    &quot;longitude&quot;: &quot;&quot;,&#xd;
+    &quot;isLogin&quot;: &quot;&quot;&#xd;
+}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/api/user/login.action</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree/>
+            <JDBCPostProcessor guiclass="TestBeanGUI" testclass="JDBCPostProcessor" testname="数据库查询请求和响应参数" enabled="true">
+              <stringProp name="dataSource">db_dklm_jdbc</stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="query">select count(*),REQUEST_PARAM,RESPONSE_PARAM from t_app_api_his where TYPE=&quot;3&quot; and PHONE=&quot;${phone_temp}&quot;;</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="variableNames">sum</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+            </JDBCPostProcessor>
+            <hashTree/>
+            <BeanShellAssertion guiclass="BeanShellAssertionGui" testclass="BeanShellAssertion" testname="BeanShell Assertion" enabled="true">
+              <stringProp name="BeanShellAssertion.query">
+
+//获取查询数据库所得的变量值
+sum=vars.get(&quot;sum_1&quot;);
+
+
+if(!sum.equals(&quot;0&quot;)){
+	Failure=true;
+	}
+
+
+
+
+
+
+
+</stringProp>
+              <stringProp name="BeanShellAssertion.filename"></stringProp>
+              <stringProp name="BeanShellAssertion.parameters"></stringProp>
+              <boolProp name="BeanShellAssertion.resetInterpreter">false</boolProp>
+            </BeanShellAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="老用户登录时，预期：不会调用oppo接口" enabled="true"/>
+        <hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="发送验证码--ok" enabled="true"/>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="发送验证码" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+    &quot;appKey&quot;: &quot;${appkey}&quot;,&#xd;
+    &quot;uuid&quot;: &quot;${uuid}&quot;,&#xd;
+    &quot;version&quot;: &quot;${version}&quot;,&#xd;
+    &quot;os&quot;: &quot;${os}&quot;,&#xd;
+    &quot;channel&quot;: ${channel},&#xd;
+    &quot;token&quot;: &quot;&quot;,&#xd;
+    &quot;data&quot;: {&#xd;
+        &quot;phone&quot;: &quot;${phone_temp}&quot;&#xd;
+    },&#xd;
+    &quot;latitude&quot;: &quot;&quot;,&#xd;
+    &quot;longitude&quot;: &quot;&quot;,&#xd;
+    &quot;isLogin&quot;: &quot;&quot;&#xd;
+}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/api/user/sendVerCode.action</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">responseData</stringProp>
+                <stringProp name="RegexExtractor.regex">responseData&quot;:&quot;(.*?)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default"></stringProp>
+                <stringProp name="RegexExtractor.match_number">1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+              <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="局部变量phone_temp生成" enabled="true">
+                <boolProp name="resetInterpreter">false</boolProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="script">vars.put(&quot;phone_temp&quot;,&quot;${__time(/100,)}&quot;)</stringProp>
+              </BeanShellPreProcessor>
+              <hashTree/>
+            </hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="响应解密" enabled="true">
+              <stringProp name="BeanShellSampler.query">import com.houhan.decrypt.EncryptType;
+import com.houhan.framework.core.tool.RsaEncryptAesTool;
+import com.houhan.decrypt.EncryptDecrypt;
+
+public static String testAccount() throws Exception {
+       //aes密钥
+        String aesKey = &quot;${aeskey}&quot;;
+        //密钥
+        String privateKey = &quot;${privatekey}&quot;;
+        //加解密类型 ENCRYPT加密；DECRYPT 解密
+        Integer type = EncryptType.DECRYPT.getValue();
+        //进行解密
+        //encryptOrDecrypt(ase密钥,密钥,需要加解密内容，加解密类型)
+        EncryptDecrypt encr = new EncryptDecrypt();
+        String jieMi = encr.encryptOrDecrypt(aesKey,privateKey,&quot;${responseData}&quot;,type);
+
+        return jieMi;
+}
+
+  vars.put(&quot;res&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+            <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="发送验证码" enabled="true">
+              <boolProp name="displayJMeterProperties">false</boolProp>
+              <boolProp name="displayJMeterVariables">true</boolProp>
+              <boolProp name="displaySystemProperties">false</boolProp>
+            </DebugSampler>
+            <hashTree>
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="响应断言" enabled="true">
+                <collectionProp name="Asserion.test_strings">
+                  <stringProp name="-856238407">&quot;status&quot; : 1</stringProp>
+                </collectionProp>
+                <stringProp name="Assertion.custom_message"></stringProp>
+                <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+                <boolProp name="Assertion.assume_success">false</boolProp>
+                <intProp name="Assertion.test_type">16</intProp>
+              </ResponseAssertion>
+              <hashTree/>
+            </hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="查询发送短信验证码" enabled="true">
+              <stringProp name="dataSource">db_sms_test</stringProp>
+              <stringProp name="query">select CONTENT from t_sms_record_detail where SIGN = &apos;${sign}&apos; AND PHONE = &apos;${phone_temp}&apos; order BY CREATE_TIME DESC LIMIT 1</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames">aaa</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+            </JDBCSampler>
+            <hashTree>
+              <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+                <stringProp name="ConstantTimer.delay">300</stringProp>
+              </ConstantTimer>
+              <hashTree/>
+            </hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="处理短信验证码" enabled="true">
+              <stringProp name="BeanShellSampler.query">
+
+
+public static String testAccount() throws Exception {
+
+	String ss = &quot;${aaa_1}&quot;;
+	//获取验证码
+	String resp = ss.substring(4,10);
+     //System.out.println(ss.substring(5,10));
+	 return resp;
+}
+	//设置短信验证码到verCode参数里面
+  vars.put(&quot;verCode&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+          </hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="登录--ok" enabled="true"/>
+          <hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="请求明文加密" enabled="false">
+              <stringProp name="BeanShellSampler.query">import com.houhan.decrypt.EncryptType;
+import com.houhan.framework.core.tool.RsaEncryptAesTool;
+import com.houhan.decrypt.EncryptDecrypt;
+
+public static String testAccount() throws Exception {
+       //aes密钥
+        String aesKey = &quot;${aeskey}&quot;;
+        //密钥
+        String privateKey = &quot;${privatekey}&quot;;
+        // params组装接口文档中所定义的接口参数
+	   String params = 	&quot;{&apos;appKey&apos;: &apos;${appkey}&apos;,&apos;uuid&apos;: &apos;${uuid}&apos;,&apos;version&apos;: &apos;${version}&apos;,&apos;os&apos;: &apos;${os}&apos;,&apos;channel&apos;: ${channel},&apos;token&apos;: &apos;&apos;,&apos;data&apos;: {&apos;phone&apos;: &apos;${phone1}&apos;,&apos;verCode&apos;: &apos;${verCode}&apos;,&apos;type&apos;: &apos;${type}&apos;,&apos;onekey&apos;: &apos;${onekey}&apos;,&apos;shanyankey&apos;: &apos;${shanyankey}&apos;,&apos;loginType&apos;: &apos;${loginType}&apos;,&apos;userName&apos;: &apos;${userName}&apos;,&apos;userIdCard&apos;: &apos;${userIdCard}&apos;},&apos;latitude&apos;: &apos;&apos;,&apos;longitude&apos;: &apos;&apos;,&apos;isLogin&apos;: &apos;&apos;}&quot;;
+        
+        //加解密类型 ENCRYPT加密；DECRYPT 解密
+        Integer type = EncryptType.ENCRYPT.getValue();
+        //进行解密
+        //encryptOrDecrypt(ase密钥,密钥,需要加解密内容，加解密类型)
+        EncryptDecrypt encr = new EncryptDecrypt();
+        String jiaMi = encr.encryptOrDecrypt(aesKey,privateKey,params,type);
+
+        return jiaMi;
+}
+
+  vars.put(&quot;req&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="登录${__threadNum}" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+    &quot;appKey&quot;: &quot;${appkey}&quot;,&#xd;
+    &quot;uuid&quot;: &quot;${uuid}&quot;,&#xd;
+    &quot;version&quot;: &quot;${version}&quot;,&#xd;
+    &quot;os&quot;: &quot;${os}&quot;,&#xd;
+    &quot;channel&quot;: ${channel_oppo},&#xd;
+    &quot;token&quot;: &quot;&quot;,&#xd;
+    &quot;data&quot;: {&#xd;
+        &quot;phone&quot;: &quot;${phone_temp}&quot;,&#xd;
+        &quot;verCode&quot;: &quot;${verCode}&quot;,&#xd;
+        &quot;type&quot;: &quot;${type}&quot;,&#xd;
+        &quot;onekey&quot;: &quot;${onekey}&quot;,&#xd;
+        &quot;shanyankey&quot;: &quot;${shanyankey}&quot;,&#xd;
+        &quot;loginType&quot;: &quot;${loginType}&quot;,&#xd;
+        &quot;userName&quot;: &quot;${userName}&quot;,&#xd;
+        &quot;userIdCard&quot;: &quot;${userIdCard}&quot;&#xd;
+    },&#xd;
+    &quot;imeiIdfa&quot;: &quot;${imeiIdfa}&quot;,&#xd;
+    &quot;latitude&quot;: &quot;&quot;,&#xd;
+    &quot;longitude&quot;: &quot;&quot;,&#xd;
+    &quot;isLogin&quot;: &quot;&quot;&#xd;
+}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/api/user/login.action</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">responseData</stringProp>
+                <stringProp name="RegexExtractor.regex">responseData&quot;:&quot;(.*?)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default"></stringProp>
+                <stringProp name="RegexExtractor.match_number">1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+            </hashTree>
+          </hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="老用户登录" enabled="true"/>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="登录${__threadNum}" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+    &quot;appKey&quot;: &quot;${appkey}&quot;,&#xd;
+    &quot;uuid&quot;: &quot;${uuid}&quot;,&#xd;
+    &quot;version&quot;: &quot;${version}&quot;,&#xd;
+    &quot;os&quot;: &quot;${os}&quot;,&#xd;
+    &quot;channel&quot;: ${channel_oppo},&#xd;
+    &quot;token&quot;: &quot;&quot;,&#xd;
+    &quot;data&quot;: {&#xd;
+        &quot;phone&quot;: &quot;${phone_temp}&quot;,&#xd;
+        &quot;verCode&quot;: &quot;${verCode}&quot;,&#xd;
+        &quot;type&quot;: &quot;${type}&quot;,&#xd;
+        &quot;onekey&quot;: &quot;${onekey}&quot;,&#xd;
+        &quot;shanyankey&quot;: &quot;${shanyankey}&quot;,&#xd;
+        &quot;loginType&quot;: &quot;${loginType}&quot;,&#xd;
+        &quot;userName&quot;: &quot;${userName}&quot;,&#xd;
+        &quot;userIdCard&quot;: &quot;${userIdCard}&quot;&#xd;
+    },&#xd;
+    &quot;imeiIdfa&quot;: &quot;${imeiIdfa}&quot;,&#xd;
+    &quot;latitude&quot;: &quot;&quot;,&#xd;
+    &quot;longitude&quot;: &quot;&quot;,&#xd;
+    &quot;isLogin&quot;: &quot;&quot;&#xd;
+}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/api/user/login.action</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">responseData</stringProp>
+                <stringProp name="RegexExtractor.regex">responseData&quot;:&quot;(.*?)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default"></stringProp>
+                <stringProp name="RegexExtractor.match_number">1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+            </hashTree>
+            <JDBCPostProcessor guiclass="TestBeanGUI" testclass="JDBCPostProcessor" testname="数据库查询请求和响应参数" enabled="true">
+              <stringProp name="dataSource">db_dklm_jdbc</stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="query">select count(*),REQUEST_PARAM,RESPONSE_PARAM from t_app_api_his where TYPE=&quot;3&quot; and PHONE=&quot;${phone_temp}&quot;;</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="variableNames">sum</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+            </JDBCPostProcessor>
+            <hashTree/>
+            <BeanShellAssertion guiclass="BeanShellAssertionGui" testclass="BeanShellAssertion" testname="BeanShell Assertion" enabled="true">
+              <stringProp name="BeanShellAssertion.query">
+
+//获取查询数据库所得的变量值
+sum=vars.get(&quot;sum_1&quot;);
+
+
+if(!sum.equals(&quot;1&quot;)){
+	Failure=true;
+	}
+
+
+
+
+
+
+
+</stringProp>
+              <stringProp name="BeanShellAssertion.filename"></stringProp>
+              <stringProp name="BeanShellAssertion.parameters"></stringProp>
+              <boolProp name="BeanShellAssertion.resetInterpreter">false</boolProp>
+            </BeanShellAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="当包名为空时，预期：不会调用oppo接口" enabled="true"/>
+        <hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="发送验证码--ok" enabled="true"/>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="发送验证码" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+    &quot;appKey&quot;: &quot;${appkey_nopkg}&quot;,&#xd;
+    &quot;uuid&quot;: &quot;${uuid}&quot;,&#xd;
+    &quot;version&quot;: &quot;${version}&quot;,&#xd;
+    &quot;os&quot;: &quot;${os}&quot;,&#xd;
+    &quot;channel&quot;: ${channel},&#xd;
+    &quot;token&quot;: &quot;&quot;,&#xd;
+    &quot;data&quot;: {&#xd;
+        &quot;phone&quot;: &quot;${phone_temp}&quot;&#xd;
+    },&#xd;
+    &quot;latitude&quot;: &quot;&quot;,&#xd;
+    &quot;longitude&quot;: &quot;&quot;,&#xd;
+    &quot;isLogin&quot;: &quot;&quot;&#xd;
+}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/api/user/sendVerCode.action</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">responseData</stringProp>
+                <stringProp name="RegexExtractor.regex">responseData&quot;:&quot;(.*?)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default"></stringProp>
+                <stringProp name="RegexExtractor.match_number">1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+              <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="局部变量phone_temp生成" enabled="true">
+                <boolProp name="resetInterpreter">false</boolProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="script">vars.put(&quot;phone_temp&quot;,&quot;${__time(/100,)}&quot;)</stringProp>
+              </BeanShellPreProcessor>
+              <hashTree/>
+            </hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="响应解密" enabled="true">
+              <stringProp name="BeanShellSampler.query">import com.houhan.decrypt.EncryptType;
+import com.houhan.framework.core.tool.RsaEncryptAesTool;
+import com.houhan.decrypt.EncryptDecrypt;
+
+public static String testAccount() throws Exception {
+       //aes密钥
+        String aesKey = &quot;${aeskey}&quot;;
+        //密钥
+        String privateKey = &quot;${privatekey}&quot;;
+        //加解密类型 ENCRYPT加密；DECRYPT 解密
+        Integer type = EncryptType.DECRYPT.getValue();
+        //进行解密
+        //encryptOrDecrypt(ase密钥,密钥,需要加解密内容，加解密类型)
+        EncryptDecrypt encr = new EncryptDecrypt();
+        String jieMi = encr.encryptOrDecrypt(aesKey,privateKey,&quot;${responseData}&quot;,type);
+
+        return jieMi;
+}
+
+  vars.put(&quot;res&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+            <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="发送验证码" enabled="true">
+              <boolProp name="displayJMeterProperties">false</boolProp>
+              <boolProp name="displayJMeterVariables">true</boolProp>
+              <boolProp name="displaySystemProperties">false</boolProp>
+            </DebugSampler>
+            <hashTree>
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="响应断言" enabled="true">
+                <collectionProp name="Asserion.test_strings">
+                  <stringProp name="-856238407">&quot;status&quot; : 1</stringProp>
+                </collectionProp>
+                <stringProp name="Assertion.custom_message"></stringProp>
+                <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+                <boolProp name="Assertion.assume_success">false</boolProp>
+                <intProp name="Assertion.test_type">16</intProp>
+              </ResponseAssertion>
+              <hashTree/>
+            </hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="查询发送短信验证码" enabled="true">
+              <stringProp name="dataSource">db_sms_test</stringProp>
+              <stringProp name="query">select CONTENT from t_sms_record_detail where SIGN = &apos;${sign_nopkg}&apos; AND PHONE = &apos;${phone_temp}&apos; order BY CREATE_TIME DESC LIMIT 1</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames">aaa</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+            </JDBCSampler>
+            <hashTree>
+              <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+                <stringProp name="ConstantTimer.delay">300</stringProp>
+              </ConstantTimer>
+              <hashTree/>
+            </hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="处理短信验证码" enabled="true">
+              <stringProp name="BeanShellSampler.query">
+
+
+public static String testAccount() throws Exception {
+
+	String ss = &quot;${aaa_1}&quot;;
+	//获取验证码
+	String resp = ss.substring(4,10);
+     //System.out.println(ss.substring(5,10));
+	 return resp;
+}
+	//设置短信验证码到verCode参数里面
+  vars.put(&quot;verCode&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+          </hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="登录--ok" enabled="true"/>
+          <hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="请求明文加密" enabled="false">
+              <stringProp name="BeanShellSampler.query">import com.houhan.decrypt.EncryptType;
+import com.houhan.framework.core.tool.RsaEncryptAesTool;
+import com.houhan.decrypt.EncryptDecrypt;
+
+public static String testAccount() throws Exception {
+       //aes密钥
+        String aesKey = &quot;${aeskey}&quot;;
+        //密钥
+        String privateKey = &quot;${privatekey}&quot;;
+        // params组装接口文档中所定义的接口参数
+	   String params = 	&quot;{&apos;appKey&apos;: &apos;${appkey}&apos;,&apos;uuid&apos;: &apos;${uuid}&apos;,&apos;version&apos;: &apos;${version}&apos;,&apos;os&apos;: &apos;${os}&apos;,&apos;channel&apos;: ${channel},&apos;token&apos;: &apos;&apos;,&apos;data&apos;: {&apos;phone&apos;: &apos;${phone1}&apos;,&apos;verCode&apos;: &apos;${verCode}&apos;,&apos;type&apos;: &apos;${type}&apos;,&apos;onekey&apos;: &apos;${onekey}&apos;,&apos;shanyankey&apos;: &apos;${shanyankey}&apos;,&apos;loginType&apos;: &apos;${loginType}&apos;,&apos;userName&apos;: &apos;${userName}&apos;,&apos;userIdCard&apos;: &apos;${userIdCard}&apos;},&apos;latitude&apos;: &apos;&apos;,&apos;longitude&apos;: &apos;&apos;,&apos;isLogin&apos;: &apos;&apos;}&quot;;
+        
+        //加解密类型 ENCRYPT加密；DECRYPT 解密
+        Integer type = EncryptType.ENCRYPT.getValue();
+        //进行解密
+        //encryptOrDecrypt(ase密钥,密钥,需要加解密内容，加解密类型)
+        EncryptDecrypt encr = new EncryptDecrypt();
+        String jiaMi = encr.encryptOrDecrypt(aesKey,privateKey,params,type);
+
+        return jiaMi;
+}
+
+  vars.put(&quot;req&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="登录${__threadNum}" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+    &quot;appKey&quot;: &quot;${appkey_nopkg}&quot;,&#xd;
+    &quot;uuid&quot;: &quot;${uuid}&quot;,&#xd;
+    &quot;version&quot;: &quot;${version}&quot;,&#xd;
+    &quot;os&quot;: &quot;${os}&quot;,&#xd;
+    &quot;channel&quot;: ${channel_oppo},&#xd;
+    &quot;token&quot;: &quot;&quot;,&#xd;
+    &quot;data&quot;: {&#xd;
+        &quot;phone&quot;: &quot;${phone_temp}&quot;,&#xd;
+        &quot;verCode&quot;: &quot;${verCode}&quot;,&#xd;
+        &quot;type&quot;: &quot;${type}&quot;,&#xd;
+        &quot;onekey&quot;: &quot;${onekey}&quot;,&#xd;
+        &quot;shanyankey&quot;: &quot;${shanyankey}&quot;,&#xd;
+        &quot;loginType&quot;: &quot;${loginType}&quot;,&#xd;
+        &quot;userName&quot;: &quot;${userName}&quot;,&#xd;
+        &quot;userIdCard&quot;: &quot;${userIdCard}&quot;&#xd;
+    },&#xd;
+    &quot;imeiIdfa&quot;: &quot;${imeiIdfa}&quot;,&#xd;
+    &quot;latitude&quot;: &quot;&quot;,&#xd;
+    &quot;longitude&quot;: &quot;&quot;,&#xd;
+    &quot;isLogin&quot;: &quot;&quot;&#xd;
+}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/api/user/login.action</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">responseData</stringProp>
+                <stringProp name="RegexExtractor.regex">responseData&quot;:&quot;(.*?)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default"></stringProp>
+                <stringProp name="RegexExtractor.match_number">1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+            </hashTree>
+            <JDBCPostProcessor guiclass="TestBeanGUI" testclass="JDBCPostProcessor" testname="数据库查询请求和响应参数" enabled="true">
+              <stringProp name="dataSource">db_dklm_jdbc</stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="query">select count(*),REQUEST_PARAM,RESPONSE_PARAM from t_app_api_his where TYPE=&quot;3&quot; and PHONE=&quot;${phone_temp}&quot;;</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="variableNames">sum</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+            </JDBCPostProcessor>
+            <hashTree/>
+            <BeanShellAssertion guiclass="BeanShellAssertionGui" testclass="BeanShellAssertion" testname="BeanShell Assertion" enabled="true">
+              <stringProp name="BeanShellAssertion.query">
+
+//获取查询数据库所得的变量值
+sum=vars.get(&quot;sum_1&quot;);
+
+
+if(!sum.equals(&quot;0&quot;)){
+	Failure=true;
+	}
+
+
+
+
+
+
+
+</stringProp>
+              <stringProp name="BeanShellAssertion.filename"></stringProp>
+              <stringProp name="BeanShellAssertion.parameters"></stringProp>
+              <boolProp name="BeanShellAssertion.resetInterpreter">false</boolProp>
+            </BeanShellAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="当imei为空时，预期：不会调用oppo接口" enabled="true"/>
+        <hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="发送验证码--ok" enabled="true"/>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="发送验证码" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+    &quot;appKey&quot;: &quot;${appkey}&quot;,&#xd;
+    &quot;uuid&quot;: &quot;${uuid}&quot;,&#xd;
+    &quot;version&quot;: &quot;${version}&quot;,&#xd;
+    &quot;os&quot;: &quot;${os}&quot;,&#xd;
+    &quot;channel&quot;: ${channel},&#xd;
+    &quot;token&quot;: &quot;&quot;,&#xd;
+    &quot;data&quot;: {&#xd;
+        &quot;phone&quot;: &quot;${phone_temp}&quot;&#xd;
+    },&#xd;
+    &quot;latitude&quot;: &quot;&quot;,&#xd;
+    &quot;longitude&quot;: &quot;&quot;,&#xd;
+    &quot;isLogin&quot;: &quot;&quot;&#xd;
+}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/api/user/sendVerCode.action</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">responseData</stringProp>
+                <stringProp name="RegexExtractor.regex">responseData&quot;:&quot;(.*?)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default"></stringProp>
+                <stringProp name="RegexExtractor.match_number">1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+              <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="局部变量phone_temp生成" enabled="true">
+                <boolProp name="resetInterpreter">false</boolProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="script">vars.put(&quot;phone_temp&quot;,&quot;${__time(/100,)}&quot;)</stringProp>
+              </BeanShellPreProcessor>
+              <hashTree/>
+            </hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="响应解密" enabled="true">
+              <stringProp name="BeanShellSampler.query">import com.houhan.decrypt.EncryptType;
+import com.houhan.framework.core.tool.RsaEncryptAesTool;
+import com.houhan.decrypt.EncryptDecrypt;
+
+public static String testAccount() throws Exception {
+       //aes密钥
+        String aesKey = &quot;${aeskey}&quot;;
+        //密钥
+        String privateKey = &quot;${privatekey}&quot;;
+        //加解密类型 ENCRYPT加密；DECRYPT 解密
+        Integer type = EncryptType.DECRYPT.getValue();
+        //进行解密
+        //encryptOrDecrypt(ase密钥,密钥,需要加解密内容，加解密类型)
+        EncryptDecrypt encr = new EncryptDecrypt();
+        String jieMi = encr.encryptOrDecrypt(aesKey,privateKey,&quot;${responseData}&quot;,type);
+
+        return jieMi;
+}
+
+  vars.put(&quot;res&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+            <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="发送验证码" enabled="true">
+              <boolProp name="displayJMeterProperties">false</boolProp>
+              <boolProp name="displayJMeterVariables">true</boolProp>
+              <boolProp name="displaySystemProperties">false</boolProp>
+            </DebugSampler>
+            <hashTree>
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="响应断言" enabled="true">
+                <collectionProp name="Asserion.test_strings">
+                  <stringProp name="-856238407">&quot;status&quot; : 1</stringProp>
+                </collectionProp>
+                <stringProp name="Assertion.custom_message"></stringProp>
+                <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+                <boolProp name="Assertion.assume_success">false</boolProp>
+                <intProp name="Assertion.test_type">16</intProp>
+              </ResponseAssertion>
+              <hashTree/>
+            </hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="查询发送短信验证码" enabled="true">
+              <stringProp name="dataSource">db_sms_test</stringProp>
+              <stringProp name="query">select CONTENT from t_sms_record_detail where SIGN = &apos;${sign}&apos; AND PHONE = &apos;${phone_temp}&apos; order BY CREATE_TIME DESC LIMIT 1</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames">aaa</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+            </JDBCSampler>
+            <hashTree>
+              <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+                <stringProp name="ConstantTimer.delay">300</stringProp>
+              </ConstantTimer>
+              <hashTree/>
+            </hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="处理短信验证码" enabled="true">
+              <stringProp name="BeanShellSampler.query">
+
+
+public static String testAccount() throws Exception {
+
+	String ss = &quot;${aaa_1}&quot;;
+	//获取验证码
+	String resp = ss.substring(4,10);
+     //System.out.println(ss.substring(5,10));
+	 return resp;
+}
+	//设置短信验证码到verCode参数里面
+  vars.put(&quot;verCode&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+          </hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="登录--ok" enabled="true"/>
+          <hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="请求明文加密" enabled="false">
+              <stringProp name="BeanShellSampler.query">import com.houhan.decrypt.EncryptType;
+import com.houhan.framework.core.tool.RsaEncryptAesTool;
+import com.houhan.decrypt.EncryptDecrypt;
+
+public static String testAccount() throws Exception {
+       //aes密钥
+        String aesKey = &quot;${aeskey}&quot;;
+        //密钥
+        String privateKey = &quot;${privatekey}&quot;;
+        // params组装接口文档中所定义的接口参数
+	   String params = 	&quot;{&apos;appKey&apos;: &apos;${appkey}&apos;,&apos;uuid&apos;: &apos;${uuid}&apos;,&apos;version&apos;: &apos;${version}&apos;,&apos;os&apos;: &apos;${os}&apos;,&apos;channel&apos;: ${channel},&apos;token&apos;: &apos;&apos;,&apos;data&apos;: {&apos;phone&apos;: &apos;${phone1}&apos;,&apos;verCode&apos;: &apos;${verCode}&apos;,&apos;type&apos;: &apos;${type}&apos;,&apos;onekey&apos;: &apos;${onekey}&apos;,&apos;shanyankey&apos;: &apos;${shanyankey}&apos;,&apos;loginType&apos;: &apos;${loginType}&apos;,&apos;userName&apos;: &apos;${userName}&apos;,&apos;userIdCard&apos;: &apos;${userIdCard}&apos;},&apos;latitude&apos;: &apos;&apos;,&apos;longitude&apos;: &apos;&apos;,&apos;isLogin&apos;: &apos;&apos;}&quot;;
+        
+        //加解密类型 ENCRYPT加密；DECRYPT 解密
+        Integer type = EncryptType.ENCRYPT.getValue();
+        //进行解密
+        //encryptOrDecrypt(ase密钥,密钥,需要加解密内容，加解密类型)
+        EncryptDecrypt encr = new EncryptDecrypt();
+        String jiaMi = encr.encryptOrDecrypt(aesKey,privateKey,params,type);
+
+        return jiaMi;
+}
+
+  vars.put(&quot;req&quot;,testAccount());</stringProp>
+              <stringProp name="BeanShellSampler.filename"></stringProp>
+              <stringProp name="BeanShellSampler.parameters"></stringProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+            </BeanShellSampler>
+            <hashTree/>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="登录${__threadNum}" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+    &quot;appKey&quot;: &quot;${appkey}&quot;,&#xd;
+    &quot;uuid&quot;: &quot;${uuid}&quot;,&#xd;
+    &quot;version&quot;: &quot;${version}&quot;,&#xd;
+    &quot;os&quot;: &quot;${os}&quot;,&#xd;
+    &quot;channel&quot;: ${channel_oppo},&#xd;
+    &quot;token&quot;: &quot;&quot;,&#xd;
+    &quot;data&quot;: {&#xd;
+        &quot;phone&quot;: &quot;${phone_temp}&quot;,&#xd;
+        &quot;verCode&quot;: &quot;${verCode}&quot;,&#xd;
+        &quot;type&quot;: &quot;${type}&quot;,&#xd;
+        &quot;onekey&quot;: &quot;${onekey}&quot;,&#xd;
+        &quot;shanyankey&quot;: &quot;${shanyankey}&quot;,&#xd;
+        &quot;loginType&quot;: &quot;${loginType}&quot;,&#xd;
+        &quot;userName&quot;: &quot;${userName}&quot;,&#xd;
+        &quot;userIdCard&quot;: &quot;${userIdCard}&quot;&#xd;
+    },&#xd;
+    &quot;imeiIdfa&quot;: &quot;${imeiIdfa_null}&quot;,&#xd;
+    &quot;latitude&quot;: &quot;&quot;,&#xd;
+    &quot;longitude&quot;: &quot;&quot;,&#xd;
+    &quot;isLogin&quot;: &quot;&quot;&#xd;
+}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/api/user/login.action</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="排行榜" enabled="false">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="发送验证码--ok" enabled="true"/>
         <hashTree>
@@ -53354,6 +55687,58 @@ public static String testAccount() throws Exception {
         </hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="登录--ok" enabled="true"/>
         <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="用户定义的变量" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="phone1" elementType="Argument">
+                <stringProp name="Argument.name">phone1</stringProp>
+                <stringProp name="Argument.value">130${__Random(11111111,99999999,)}</stringProp>
+                <stringProp name="Argument.desc">手机号${__time(/100,)}固定130开头手机号</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="verCode0" elementType="Argument">
+                <stringProp name="Argument.name">verCode0</stringProp>
+                <stringProp name="Argument.value"></stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="type" elementType="Argument">
+                <stringProp name="Argument.name">type</stringProp>
+                <stringProp name="Argument.value">1</stringProp>
+                <stringProp name="Argument.desc">0：一键登陆 1：普通登陆</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="onekey" elementType="Argument">
+                <stringProp name="Argument.name">onekey</stringProp>
+                <stringProp name="Argument.value">111</stringProp>
+                <stringProp name="Argument.desc">一键登录参数：1.appId、当前APP对应的appid,SDK传入; 2.accessToken、运营商token,SDK传入; 3.telecom、运营商，SDK传入; 4.timestamp、UNIX时间戳，毫秒级，SDK传入; 5.randoms</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="shanyankey" elementType="Argument">
+                <stringProp name="Argument.name">shanyankey</stringProp>
+                <stringProp name="Argument.value"></stringProp>
+                <stringProp name="Argument.desc">解密key</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="loginType" elementType="Argument">
+                <stringProp name="Argument.name">loginType</stringProp>
+                <stringProp name="Argument.value">0</stringProp>
+                <stringProp name="Argument.desc">1：登陆留资 0：直接登陆</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="userName" elementType="Argument">
+                <stringProp name="Argument.name">userName</stringProp>
+                <stringProp name="Argument.value"></stringProp>
+                <stringProp name="Argument.desc">用户名，留资用</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="userIdCard" elementType="Argument">
+                <stringProp name="Argument.name">userIdCard</stringProp>
+                <stringProp name="Argument.value"></stringProp>
+                <stringProp name="Argument.desc">身份证，留资用</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
           <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="请求明文加密" enabled="false">
             <stringProp name="BeanShellSampler.query">import com.houhan.decrypt.EncryptType;
 import com.houhan.framework.core.tool.RsaEncryptAesTool;
@@ -53406,6 +55791,7 @@ public static String testAccount() throws Exception {
         &quot;userName&quot;: &quot;${userName}&quot;,&#xd;
         &quot;userIdCard&quot;: &quot;${userIdCard}&quot;&#xd;
     },&#xd;
+    &quot;imeiIdfa&quot;: &quot;${imeiIdfa}&quot;,&#xd;
     &quot;latitude&quot;: &quot;&quot;,&#xd;
     &quot;longitude&quot;: &quot;&quot;,&#xd;
     &quot;isLogin&quot;: &quot;&quot;&#xd;
@@ -53508,109 +55894,6 @@ props.put(&quot;phone_rank&quot;,s1);
             <hashTree/>
           </hashTree>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="在数据库中增加排行榜测试数据" enabled="true"/>
-        <hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="在数据库中增加排行榜测试数据" enabled="true">
-            <stringProp name="dataSource">flowsum_jdbc</stringProp>
-            <stringProp name="queryType">Update Statement</stringProp>
-            <stringProp name="query">#若想再增加数据量，增加N_ID,并且增加“排行榜测试数据构造0”末尾的数字
-INSERT INTO `flowsum`.`t_basic_cms_product` 
-(`N_ID`, `COMP_ID`, `CREATE_BY`, `CREATE_TIME`, `MODI_BY`, 
-`MODI_TIME`, `ORG_ID`, `SORT_NUM`, `STATUS`, `APPLICATION_MATERIALS`, 
-`APPLICATION_PROCEDURE`, `APPLY_NUM`, `APPLY_URL`, `DL_TIME`, `FEATURE`,
- `IMG_URL`, `IS_FULL`, `IS_RECOMMEND`, `LABEL1`, `LABEL2`, `MONEY_MAX`, 
-`MONEY_MIN`, `NAME`, `OL_TIME`, `PASS_RATE`, `PRODUCT_DESCRIPTION`, `RATE`, 
-`RATE_TYPE`, `SHOW_LOCATION`, `SUBTITLE`, `TERM_MAX`, `TERM_MIN`, `TERM_TYPE`, 
-`STR0`, `STR1`, `product_type`, `product_level`, `uv_rate`, `apply_rate`, `loan_rate`, 
-`manager_url`, `manager_username`, `manager_psw`, `manager_channel`, `android_download_url`,
- `ios_download_type`, `ios_download_url`, `android_download_type2`, `ios_bundle_id`, `android_bundle_id`,
- `JOINT_LOGIN`, `LOGIN_PASS`, `PRODUCT_TAG`, `is_Big_Product`, `private_Key`, `public_Key`, `PARTNER_ID`, 
-`PRODUCT_LINK`, `CHECK_STATUS`, `adver`, `apply_condition`, `harry_Time`, `new_guidance`, `details`, 
-`money_Increasing`, `term_Increasing`, `big_Url`, `product_Shape`, `is_hot`, `DISPLAY_POSITION_MIAO`,
- `CHECK_IMG_URL`, `CHECK_NAME`, `CHECK_PARTNER_ID`, `CHECK_PRODUCT_LINK`, `CHECK_PRODUCT_SHAPE`, 
-`CHECK_PRODUCT_TYPE`, `CHECK_SUBTITLE`, `HAS_VIDEO`, `VIDEO_URL`, `PRODUCT_BIG_PICTURE`, `HOT_WHETHER_ANDROID`,
- `HOT_WHETHER_IOS`, `NEWCOMER_ANDROID`, `NEWCOMER_IOS`, `NEW_WHETHER_ANDROID`, `NEW_WHETHER_IOS`, `UV_PRICE`,
- `MILEAGE_STATUS`, `TARGET_CONTROL`, `SOLD_OUT_TIME`, `COMPLETE_TARGET`, `DARK_HORSE_ANDROID`, `DARK_HORSE_IOS`) 
-VALUES (&apos;30000000&apos;, &apos;10000000&apos;, &apos;1&apos;, &apos;2020-02-10 23:43:20&apos;, &apos;1&apos;, &apos;2020-02-10 23:43:24&apos;, 
-&apos;222&apos;, &apos;1&apos;, &apos;2&apos;, &apos;231233&apos;, &apos;&lt;p&gt;452&lt;/p&gt;&apos;, &apos;567&apos;, &apos;http://www.baidu.com&apos;, NULL, NULL,
- &apos;https://jkqb-jsb-test.oss-cn-shanghai.aliyuncs.com/530/8e0e16c4-ad38-4659-a663-abfdf3fc2555.png&apos;, 
-&apos;0&apos;, NULL, &apos;推荐&apos;, NULL, &apos;20000.00&apos;, &apos;10000.00&apos;, &apos;排行榜测试数据构造0&apos;, NULL, &apos;5.0&apos;, &apos;23536234&apos;,
- &apos;67.00&apos;, NULL, &apos;3&apos;, NULL, &apos;23253&apos;, &apos;56&apos;, &apos;1&apos;, NULL, NULL, &apos;2&apos;, NULL, NULL, NULL, NULL, NULL, NULL,
- NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &apos;1&apos;, NULL, NULL, NULL, NULL, NULL, &apos;10000071&apos;, 
-&apos;https://jin.baidu.com/mkt/cloan/guide?code=0122huoke01&amp;channel=JXJhuoke&amp;spot=daikuandaohang-201808101&apos;,
- &apos;2&apos;, &apos;53245234&apos;, NULL, &apos;56&apos;, &apos;&lt;p&gt;234&lt;/p&gt;&apos;, &apos;&lt;p&gt;面向人群：生意人,上班族,自由职业者,其他,&lt;/p&gt;&lt;p&gt;审核方式：
-全自动审批&lt;/p&gt;&lt;p&gt;到账方式：银行卡&lt;/p&gt;&lt;p&gt;服务费用：234&lt;/p&gt;&lt;p&gt;实际到账：全额到账&lt;/p&gt;&lt;p&gt;还款方式：分期还款&lt;/p&gt;&lt;p&gt;提前提款：
-可以，收取违约金&lt;/p&gt;&lt;p&gt;预期算法：23&lt;/p&gt;&lt;p&gt;查验征信：否&lt;/p&gt;&lt;p&gt;能否提额：是&lt;/p&gt;&apos;, NULL, &apos;45&apos;, NULL, &apos;1&apos;, NULL, NULL, 
-&apos;https://jkqb-jsb-test.oss-cn-shanghai.aliyuncs.com/530/35b9d1a7-66b6-4b66-a623-053a067625ae.png&apos;, &apos;产品名称&apos;, 
-&apos;10000071&apos;, &apos;https://jin.baidu.com/mkt/cloan/guide?code=0122huoke01&amp;channel=JXJhuoke&amp;spot=daikuandaohang-201808101&apos;,
- &apos;1&apos;, &apos;2&apos;, &apos;43532532&apos;, &apos;0&apos;, NULL, &apos;https://hh-rgd.oss-cn-shanghai.aliyuncs.com/pic/41978fb0-5bf3-415a-a114-383f6cafcd07.png&apos;, 
-&apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1.00&apos;, &apos;0&apos;, &apos;2&apos;, &apos;2020-02-10 23:50:50&apos;, &apos;1&apos;, NULL, NULL),
-
-(&apos;30000001&apos;, &apos;10000000&apos;, &apos;1&apos;, &apos;2020-02-10 23:43:20&apos;, &apos;1&apos;, &apos;2020-02-10 23:43:24&apos;, 
-&apos;222&apos;, &apos;1&apos;, &apos;2&apos;, &apos;231233&apos;, &apos;&lt;p&gt;452&lt;/p&gt;&apos;, &apos;567&apos;, &apos;http://www.baidu.com&apos;, NULL, NULL,
- &apos;https://jkqb-jsb-test.oss-cn-shanghai.aliyuncs.com/530/8e0e16c4-ad38-4659-a663-abfdf3fc2555.png&apos;, 
-&apos;0&apos;, NULL, &apos;推荐&apos;, NULL, &apos;20000.00&apos;, &apos;10000.00&apos;, &apos;排行榜测试数据构造1&apos;, NULL, &apos;5.0&apos;, &apos;23536234&apos;,
- &apos;67.00&apos;, NULL, &apos;3&apos;, NULL, &apos;23253&apos;, &apos;56&apos;, &apos;1&apos;, NULL, NULL, &apos;2&apos;, NULL, NULL, NULL, NULL, NULL, NULL,
- NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &apos;1&apos;, NULL, NULL, NULL, NULL, NULL, &apos;10000071&apos;, 
-&apos;https://jin.baidu.com/mkt/cloan/guide?code=0122huoke01&amp;channel=JXJhuoke&amp;spot=daikuandaohang-201808101&apos;,
- &apos;2&apos;, &apos;53245234&apos;, NULL, &apos;56&apos;, &apos;&lt;p&gt;234&lt;/p&gt;&apos;, &apos;&lt;p&gt;面向人群：生意人,上班族,自由职业者,其他,&lt;/p&gt;&lt;p&gt;审核方式：
-全自动审批&lt;/p&gt;&lt;p&gt;到账方式：银行卡&lt;/p&gt;&lt;p&gt;服务费用：234&lt;/p&gt;&lt;p&gt;实际到账：全额到账&lt;/p&gt;&lt;p&gt;还款方式：分期还款&lt;/p&gt;&lt;p&gt;提前提款：
-可以，收取违约金&lt;/p&gt;&lt;p&gt;预期算法：23&lt;/p&gt;&lt;p&gt;查验征信：否&lt;/p&gt;&lt;p&gt;能否提额：是&lt;/p&gt;&apos;, NULL, &apos;45&apos;, NULL, &apos;1&apos;, NULL, NULL, 
-&apos;https://jkqb-jsb-test.oss-cn-shanghai.aliyuncs.com/530/35b9d1a7-66b6-4b66-a623-053a067625ae.png&apos;, &apos;产品名称&apos;, 
-&apos;10000071&apos;, &apos;https://jin.baidu.com/mkt/cloan/guide?code=0122huoke01&amp;channel=JXJhuoke&amp;spot=daikuandaohang-201808101&apos;,
- &apos;1&apos;, &apos;2&apos;, &apos;43532532&apos;, &apos;0&apos;, NULL, &apos;https://hh-rgd.oss-cn-shanghai.aliyuncs.com/pic/41978fb0-5bf3-415a-a114-383f6cafcd07.png&apos;, 
-&apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1.00&apos;, &apos;0&apos;, &apos;2&apos;, &apos;2020-02-10 23:50:50&apos;, &apos;1&apos;, NULL, NULL),
-(&apos;30000002&apos;, &apos;10000000&apos;, &apos;1&apos;, &apos;2020-02-10 23:43:20&apos;, &apos;1&apos;, &apos;2020-02-10 23:43:24&apos;, 
-&apos;222&apos;, &apos;1&apos;, &apos;2&apos;, &apos;231233&apos;, &apos;&lt;p&gt;452&lt;/p&gt;&apos;, &apos;567&apos;, &apos;http://www.baidu.com&apos;, NULL, NULL,
- &apos;https://jkqb-jsb-test.oss-cn-shanghai.aliyuncs.com/530/8e0e16c4-ad38-4659-a663-abfdf3fc2555.png&apos;, 
-&apos;0&apos;, NULL, &apos;推荐&apos;, NULL, &apos;20000.00&apos;, &apos;10000.00&apos;, &apos;排行榜测试数据构造2&apos;, NULL, &apos;5.0&apos;, &apos;23536234&apos;,
- &apos;67.00&apos;, NULL, &apos;3&apos;, NULL, &apos;23253&apos;, &apos;56&apos;, &apos;1&apos;, NULL, NULL, &apos;2&apos;, NULL, NULL, NULL, NULL, NULL, NULL,
- NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &apos;1&apos;, NULL, NULL, NULL, NULL, NULL, &apos;10000071&apos;, 
-&apos;https://jin.baidu.com/mkt/cloan/guide?code=0122huoke01&amp;channel=JXJhuoke&amp;spot=daikuandaohang-201808101&apos;,
- &apos;2&apos;, &apos;53245234&apos;, NULL, &apos;56&apos;, &apos;&lt;p&gt;234&lt;/p&gt;&apos;, &apos;&lt;p&gt;面向人群：生意人,上班族,自由职业者,其他,&lt;/p&gt;&lt;p&gt;审核方式：
-全自动审批&lt;/p&gt;&lt;p&gt;到账方式：银行卡&lt;/p&gt;&lt;p&gt;服务费用：234&lt;/p&gt;&lt;p&gt;实际到账：全额到账&lt;/p&gt;&lt;p&gt;还款方式：分期还款&lt;/p&gt;&lt;p&gt;提前提款：
-可以，收取违约金&lt;/p&gt;&lt;p&gt;预期算法：23&lt;/p&gt;&lt;p&gt;查验征信：否&lt;/p&gt;&lt;p&gt;能否提额：是&lt;/p&gt;&apos;, NULL, &apos;45&apos;, NULL, &apos;1&apos;, NULL, NULL, 
-&apos;https://jkqb-jsb-test.oss-cn-shanghai.aliyuncs.com/530/35b9d1a7-66b6-4b66-a623-053a067625ae.png&apos;, &apos;产品名称&apos;, 
-&apos;10000071&apos;, &apos;https://jin.baidu.com/mkt/cloan/guide?code=0122huoke01&amp;channel=JXJhuoke&amp;spot=daikuandaohang-201808101&apos;,
- &apos;1&apos;, &apos;2&apos;, &apos;43532532&apos;, &apos;0&apos;, NULL, &apos;https://hh-rgd.oss-cn-shanghai.aliyuncs.com/pic/41978fb0-5bf3-415a-a114-383f6cafcd07.png&apos;, 
-&apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1.00&apos;, &apos;0&apos;, &apos;2&apos;, &apos;2020-02-10 23:50:50&apos;, &apos;1&apos;, NULL, NULL);
-
-#若想再增加数据量，product_id（与上表的N_ID一一对应）,他们的排序号sort_number不能一样
-INSERT INTO `flowsum`.`t_product_rank`
- (`product_id`, `app_id`, `label`, `lending_index`, `up_down`, `publish_time`, `STR0`, 
-`STR1`, `COMP_ID`, `CREATE_BY`, `CREATE_TIME`, `MODI_BY`, `MODI_TIME`, `ORG_ID`, `SORT_NUM`, `STATUS`, 
-`IS_HAND_OPERATE`, `POSITION_ID`) 
-VALUES (&apos;30000000&apos;, &apos;10000042&apos;, &apos;熟&apos;, &apos;55.00&apos;, &apos;22&apos;, &apos;2020-02-10 23:38:43&apos;,
- NULL, NULL, &apos;10000000&apos;, &apos;1&apos;, &apos;2020-02-10 23:36:52&apos;, &apos;1&apos;, &apos;2020-02-10 23:37:01&apos;, &apos;222&apos;, &apos;99&apos;, &apos;1&apos;, NULL, NULL),
-(&apos;30000001&apos;, &apos;10000042&apos;, &apos;熟&apos;, &apos;55.00&apos;, &apos;22&apos;, &apos;2020-02-10 23:38:43&apos;,
- NULL, NULL, &apos;10000000&apos;, &apos;1&apos;, &apos;2020-02-10 23:36:52&apos;, &apos;1&apos;, &apos;2020-02-10 23:37:01&apos;, &apos;222&apos;, &apos;98&apos;, &apos;1&apos;, NULL, NULL),
-(&apos;30000002&apos;, &apos;10000042&apos;, &apos;熟&apos;, &apos;55.00&apos;, &apos;22&apos;, &apos;2020-02-10 23:38:43&apos;,
- NULL, NULL, &apos;10000000&apos;, &apos;1&apos;, &apos;2020-02-10 23:36:52&apos;, &apos;1&apos;, &apos;2020-02-10 23:37:01&apos;, &apos;222&apos;, &apos;97&apos;, &apos;1&apos;, NULL, NULL);</stringProp>
-            <stringProp name="queryArguments"></stringProp>
-            <stringProp name="queryArgumentsTypes"></stringProp>
-            <stringProp name="variableNames"></stringProp>
-            <stringProp name="resultVariable"></stringProp>
-            <stringProp name="queryTimeout"></stringProp>
-            <stringProp name="resultSetMaxRows"></stringProp>
-            <stringProp name="resultSetHandler">Store as String</stringProp>
-          </JDBCSampler>
-          <hashTree/>
-        </hashTree>
-      </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="排行榜" enabled="true">
-        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
-          <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">1</stringProp>
-        </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
-        <boolProp name="ThreadGroup.scheduler">false</boolProp>
-        <stringProp name="ThreadGroup.duration"></stringProp>
-        <stringProp name="ThreadGroup.delay"></stringProp>
-        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
-      </ThreadGroup>
-      <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="排行榜" enabled="true"/>
         <hashTree>
           <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP请求默认值" enabled="true">
@@ -53698,7 +55981,7 @@ pagesize=vars.get(&quot;pageSize&quot;);
 int pageno=Integer.parseInt(pageno);
 int pagesize=Integer.parseInt(pagesize);
 temp=(pageno-1)*pagesize;
-System.out.println(temp);
+//System.out.println(temp);
 vars.put(&quot;startline&quot;,temp.toString())</stringProp>
             </BeanShellPreProcessor>
             <hashTree/>
@@ -53958,7 +56241,7 @@ pagesize=vars.get(&quot;pageSize3&quot;);
 int pageno=Integer.parseInt(pageno);
 int pagesize=Integer.parseInt(pagesize);
 temp=(pageno-1)*pagesize;
-System.out.println(temp);
+//System.out.println(temp);
 vars.put(&quot;startline&quot;,temp.toString())</stringProp>
             </BeanShellPreProcessor>
             <hashTree/>
@@ -54106,7 +56389,7 @@ pagesize=vars.get(&quot;pageSize4&quot;);
 int pageno=Integer.parseInt(pageno);
 int pagesize=Integer.parseInt(pagesize);
 temp=(pageno-1)*pagesize;
-System.out.println(temp);
+//System.out.println(temp);
 vars.put(&quot;startline&quot;,temp.toString())</stringProp>
             </BeanShellPreProcessor>
             <hashTree/>
@@ -54210,7 +56493,7 @@ if (len_res!=0){
           </hashTree>
         </hashTree>
       </hashTree>
-      <PostThreadGroup guiclass="PostThreadGroupGui" testclass="PostThreadGroup" testname="tearDown Thread Group" enabled="true">
+      <PostThreadGroup guiclass="PostThreadGroupGui" testclass="PostThreadGroup" testname="测试数据清除" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -54224,7 +56507,7 @@ if (len_res!=0){
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </PostThreadGroup>
       <hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="清除排行榜测试数据" enabled="true"/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="清除排行榜测试数据" enabled="false"/>
         <hashTree>
           <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="清除排行榜测试数据" enabled="true">
             <stringProp name="dataSource">flowsum_jdbc</stringProp>
@@ -54240,6 +56523,41 @@ delete from `flowsum`.`t_basic_cms_product`  where n_id&gt;=30000000 and n_id&lt
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
+        </hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="oppo接口数据清除" enabled="true"/>
+        <hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="有包名的app数据恢复" enabled="true"/>
+          <hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="恢复包名" enabled="true">
+              <stringProp name="dataSource">db_dklm_jdbc</stringProp>
+              <stringProp name="queryType">Update Statement</stringProp>
+              <stringProp name="query">update t_basic_app set  LOCAL_VERSION=&quot;${__P(package_temp1,)}&quot; where APP_KEY=&quot;${appkey}&quot;;</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="variableNames"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+          </hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="空包名的app 数据恢复" enabled="true"/>
+          <hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="恢复包名" enabled="true">
+              <stringProp name="dataSource">db_dklm_jdbc</stringProp>
+              <stringProp name="queryType">Update Statement</stringProp>
+              <stringProp name="query">update t_basic_app set  LOCAL_VERSION=&quot;${__P(package_temp,)}&quot; where APP_KEY=&quot;${appkey_nopkg}&quot;;</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="variableNames"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+          </hashTree>
         </hashTree>
       </hashTree>
       <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
